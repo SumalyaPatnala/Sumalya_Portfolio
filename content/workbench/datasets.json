@@ -1,0 +1,14 @@
+[
+  {
+    "id": "synth-vendor-qa",
+    "name": "Synthetic vendor document Q&A",
+    "description": "Six invented contract and policy questions. Passages are fictional. Nothing here is from an employer corpus.",
+    "nCases": 6
+  },
+  {
+    "id": "synth-agent-ops",
+    "name": "Synthetic agent ops tasks",
+    "description": "Four invented diagnostic tasks that require a tool call before answering. Used to show traces and tool-error taxonomy.",
+    "nCases": 4
+  }
+]

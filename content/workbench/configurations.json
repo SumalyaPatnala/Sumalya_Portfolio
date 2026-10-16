@@ -1,0 +1,26 @@
+[
+  {
+    "id": "lexical-rag",
+    "name": "Lexical RAG",
+    "description": "BM25-style retrieval, top-4 chunks, generate without rerank or groundedness gate.",
+    "model": "fixture-slm-base",
+    "retrieval": "bm25 top-4",
+    "temperature": 0.2
+  },
+  {
+    "id": "hybrid-gated",
+    "name": "Hybrid + groundedness gate",
+    "description": "Hybrid retrieve, rerank to top-3, refuse if used evidence is unsupported.",
+    "model": "fixture-slm-adapted",
+    "retrieval": "hybrid + rerank top-3 + gate",
+    "temperature": 0
+  },
+  {
+    "id": "tool-agent",
+    "name": "Tool-using agent",
+    "description": "Planner calls a diagnostic tool, then writes an answer that must cite the tool output.",
+    "model": "fixture-agent-v1",
+    "retrieval": "tool traces only",
+    "temperature": 0
+  }
+]

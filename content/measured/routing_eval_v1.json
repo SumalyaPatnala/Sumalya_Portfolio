@@ -1,0 +1,230 @@
+{
+  "schemaVersion": "measured-eval-v1",
+  "provenance": "MEASURED",
+  "kind": "routing-offline",
+  "name": "Offline routing baseline composed with router()",
+  "datasetId": "routing_eval_v1",
+  "datasetVersion": "routing_eval_v1",
+  "n": 134,
+  "predictor": "evals.routing.baseline.classify_query \u2192 ai_network_ops.agent.router",
+  "configuration": {
+    "mode": "offline_instruction_baseline_plus_router",
+    "productionTraffic": false,
+    "liveClassifier": false
+  },
+  "notMeasured": [
+    "gemini-2.5-flash routing accuracy",
+    "end-to-end specialist answer quality",
+    "live tool success"
+  ],
+  "limitations": [
+    "Keyword baseline plus deterministic router. Not Gemini-2.5-flash.",
+    "Labels and the baseline share an author.",
+    "Routing accuracy is not end-to-end specialist success.",
+    "No production traffic."
+  ],
+  "metrics": {
+    "strictAccuracy": 0.903,
+    "lenientAccuracy": 0.9328,
+    "macroF1": 0.9062,
+    "invalidRouteRate": 0.0,
+    "queryPreservationRate": 1.0,
+    "meanToolJaccard": 0.9611,
+    "toolScoredN": 30,
+    "latencyP50Ms": 0.0095,
+    "meanLatencyMs": 0.0105,
+    "strictMisses": 13
+  },
+  "perClass": [
+    {
+      "route": "NETWORK",
+      "precision": 0.9118,
+      "recall": 0.9394,
+      "f1": 0.9254,
+      "support": 33
+    },
+    {
+      "route": "INFERENCE",
+      "precision": 0.963,
+      "recall": 0.8667,
+      "f1": 0.9123,
+      "support": 30
+    },
+    {
+      "route": "INCIDENT",
+      "precision": 0.8333,
+      "recall": 0.9375,
+      "f1": 0.8824,
+      "support": 48
+    },
+    {
+      "route": "CAPACITY",
+      "precision": 1.0,
+      "recall": 0.8261,
+      "f1": 0.9048,
+      "support": 23
+    }
+  ],
+  "confusion": {
+    "routes": [
+      "NETWORK",
+      "INFERENCE",
+      "INCIDENT",
+      "CAPACITY"
+    ],
+    "matrix": [
+      [
+        31,
+        0,
+        2,
+        0
+      ],
+      [
+        0,
+        26,
+        4,
+        0
+      ],
+      [
+        3,
+        0,
+        45,
+        0
+      ],
+      [
+        0,
+        1,
+        3,
+        19
+      ]
+    ]
+  },
+  "failureCategories": {
+    "abstention_preferred_and_misrouted": 1,
+    "correct": 112,
+    "forced_route_no_abstention": 9,
+    "misroute_CAPACITY_to_INCIDENT": 3,
+    "misroute_CAPACITY_to_INFERENCE": 1,
+    "misroute_INCIDENT_to_NETWORK": 2,
+    "misroute_INFERENCE_to_INCIDENT": 4,
+    "misroute_NETWORK_to_INCIDENT": 2
+  },
+  "failures": [
+    {
+      "id": "net-006",
+      "slice": "clear",
+      "query": "Check whether checkout.example.test returns HTTP 200 from this host.",
+      "gold": "NETWORK",
+      "predicted": "INCIDENT",
+      "taxonomy": "misroute_NETWORK_to_INCIDENT"
+    },
+    {
+      "id": "cap-013",
+      "slice": "clear",
+      "query": "If TTFT targets stay fixed, how does replica count change with batch size? Capacity math.",
+      "gold": "CAPACITY",
+      "predicted": "INFERENCE",
+      "taxonomy": "misroute_CAPACITY_to_INFERENCE"
+    },
+    {
+      "id": "amb-005",
+      "slice": "ambiguous",
+      "query": "Can we handle more load?",
+      "gold": "CAPACITY",
+      "predicted": "INCIDENT",
+      "taxonomy": "misroute_CAPACITY_to_INCIDENT"
+    },
+    {
+      "id": "amb-009",
+      "slice": "ambiguous",
+      "query": "Need more machines or a better model?",
+      "gold": "CAPACITY",
+      "predicted": "INCIDENT",
+      "taxonomy": "misroute_CAPACITY_to_INCIDENT"
+    },
+    {
+      "id": "mul-001",
+      "slice": "multi_intent",
+      "query": "DNS for api.example.com fails AND TTFT is 3s. Investigate the joint failure.",
+      "gold": "INCIDENT",
+      "predicted": "NETWORK",
+      "taxonomy": "misroute_INCIDENT_to_NETWORK"
+    },
+    {
+      "id": "mul-009",
+      "slice": "multi_intent",
+      "query": "Measure https://example.com latency and TTFT on the summarizer in one answer.",
+      "gold": "INCIDENT",
+      "predicted": "NETWORK",
+      "taxonomy": "misroute_INCIDENT_to_NETWORK"
+    },
+    {
+      "id": "uns-001",
+      "slice": "unsupported",
+      "query": "Write a haiku about BGP.",
+      "gold": "INCIDENT",
+      "predicted": "NETWORK",
+      "taxonomy": "abstention_preferred_and_misrouted"
+    },
+    {
+      "id": "mis-007",
+      "slice": "missing_info",
+      "query": "Is it reachable?",
+      "gold": "NETWORK",
+      "predicted": "INCIDENT",
+      "taxonomy": "misroute_NETWORK_to_INCIDENT"
+    },
+    {
+      "id": "mis-008",
+      "slice": "missing_info",
+      "query": "Scale it.",
+      "gold": "CAPACITY",
+      "predicted": "INCIDENT",
+      "taxonomy": "misroute_CAPACITY_to_INCIDENT"
+    },
+    {
+      "id": "mis-010",
+      "slice": "missing_info",
+      "query": "Queueing is high.",
+      "gold": "INFERENCE",
+      "predicted": "INCIDENT",
+      "taxonomy": "misroute_INFERENCE_to_INCIDENT"
+    },
+    {
+      "id": "tu-003",
+      "slice": "tool_unavailable",
+      "query": "Query Prometheus for kv_cache_usage_perc.",
+      "gold": "INFERENCE",
+      "predicted": "INCIDENT",
+      "taxonomy": "misroute_INFERENCE_to_INCIDENT"
+    },
+    {
+      "id": "tu-006",
+      "slice": "tool_unavailable",
+      "query": "Connect to the GPU DCGM exporter and report SM occupancy.",
+      "gold": "INFERENCE",
+      "predicted": "INCIDENT",
+      "taxonomy": "misroute_INFERENCE_to_INCIDENT"
+    },
+    {
+      "id": "tu-008",
+      "slice": "tool_unavailable",
+      "query": "Fetch the current continuous-batching queue depth now.",
+      "gold": "INFERENCE",
+      "predicted": "INCIDENT",
+      "taxonomy": "misroute_INFERENCE_to_INCIDENT"
+    }
+  ],
+  "knownLimitations": [
+    "gemini-2.5-flash routing accuracy",
+    "end-to-end specialist answer quality",
+    "live tool success"
+  ],
+  "routerContract": {
+    "n": 16,
+    "repeats": 3,
+    "accuracy": 1.0,
+    "determinismRate": 1.0,
+    "queryPreservationRate": 1.0
+  }
+}
