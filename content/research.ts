@@ -39,6 +39,8 @@ export const research = {
     "If a paper is submitted or accepted, update this page with venue status instead of implying it.",
   ],
   interests: [
+    "Computer vision and temporal events",
+    "Open vision-language models",
     "Evaluation methodology for retrieval and agents",
     "Deterministic evidence objects in front of language models",
     "Researcher-facing tooling: traces, comparisons, failure taxonomies",
@@ -47,3 +49,107 @@ export const research = {
     "Environmental constraints on AI compute (research direction; no findings yet)",
   ],
 };
+
+export const researchThreads = [
+  {
+    id: "vision-events",
+    theme: "teal" as const,
+    kicker: "Computer vision",
+    title: "Video perception as evidence",
+    question:
+      "Can detections, persistent track IDs, and ROI enter/exit events be replayed against the source video instead of disappearing into a demo GIF?",
+    method:
+      "WorldSense Phase 1 samples MP4 frames, runs TorchVision Faster R-CNN, associates BYTE-style IDs, and logs polygon occupancy with evidence JPEGs.",
+    status: "Local prototype · Phase 1. Not hosted. SAM 2, VGGT, and VQA are not implemented.",
+    evidence:
+      "Local repository only. No public GitHub remote. No labeled MOT benchmark or mAP claim.",
+    links: [{ href: "/work/worldsense-ai", label: "WorldSense case study" }],
+  },
+  {
+    id: "vlm-fashion",
+    theme: "rose" as const,
+    kicker: "Vision-language models",
+    title: "Open VLM fashion search",
+    question:
+      "Can an open vision-language lab make fashion retrieval, attributes, and tool use evaluable instead of closed-catalog magic?",
+    method:
+      "Intended loop only: image/text query → open VLM adapter → multimodal retrieval → tools → scored answers.",
+    status: "Not implemented. No repository, demo, or benchmark.",
+    evidence: "No local or GitHub repository named StyleWeave was found. No metrics.",
+    links: [{ href: "/work/styleweave-vlm-lab", label: "StyleWeave case study" }],
+  },
+  {
+    id: "model-eval",
+    theme: "yellow" as const,
+    kicker: "Model evaluation",
+    title: "Score the contract, not the vibe",
+    question:
+      "If an adapter or a router is the product, can the evaluation freeze the dataset, name the predictor, and refuse to pool leaked and held-out runs?",
+    method:
+      "SLM: base vs LoRA on a five-section SDG contract (leaked N=4 CSV kept separate from held-out N=13). Routing: keyword baseline composed with router() on routing_eval_v1 (N=134), not Gemini.",
+    status: "Measured artifacts exist. Live Gemini routing remains BLOCKED.",
+    evidence:
+      "Held-out SDG hit fell (0.7823 → 0.6031) while structure rose. Routing strict 90.3% is the keyword baseline, not a live classifier.",
+    links: [
+      { href: "/work/slm-finetuning-evaluation", label: "SLM evaluation" },
+      { href: "/work/ai-infrastructure-network-intelligence", label: "Routing evaluation" },
+      { href: "/lab?source=measured", label: "Measured workbench" },
+    ],
+  },
+  {
+    id: "reliable-reasoning",
+    theme: "coral" as const,
+    kicker: "Reliable AI reasoning",
+    title: "Evidence before interpretation",
+    question:
+      "Can a later model be wrong about meaning without being wrong about the evidence object it inherited?",
+    method:
+      "Typed RoutingDecision with the original query intact; SOC EvidenceRecord provenance and correlation only on literal identifiers. LangGraph is not implemented on the SOC milestone.",
+    status: "Routing graph is in public source with a hosted demo behind GitHub. SOC is in progress, no LLM layer.",
+    evidence:
+      "Public GitHub for both systems. SOC BOTS v3 validation has not been run. Cloud Run reports 1.4.0 demo mode, classifier off.",
+    links: [
+      { href: "/work/ai-infrastructure-network-intelligence", label: "Network intelligence" },
+      { href: "/work/agentic-soc-platform", label: "SOC evidence layer" },
+      {
+        href: "https://github.com/SumalyaPatnala/agentic-soc-platform",
+        label: "SOC repository",
+        external: true,
+      },
+    ],
+  },
+  {
+    id: "multimodal",
+    theme: "lavender" as const,
+    kicker: "Multimodal retrieval",
+    title: "Social-innovation evidence across papers and video",
+    question:
+      "Can a retrieval-first assistant inspect papers, project records, and public video without collapsing sources into uncited prose?",
+    method:
+      "Unstructured PDFs, BLIP captions, Whisper transcripts, Ollama embeddings, Chroma, MultiQueryRetriever, local ChatOllama.",
+    status: "Academic research prototype. Not verified as published or peer-reviewed.",
+    evidence:
+      "LinkedIn GRA tenure and a faculty recommendation. No public frozen nDCG/recall@k harness in this website.",
+    links: [
+      { href: "/work/multimodal-llm-assistant", label: "Multimodal case study" },
+      {
+        href: "https://github.com/SumalyaPatnala/Social_Innovation_Research_With_LLMS",
+        label: "Related GitHub",
+        external: true,
+      },
+    ],
+  },
+  {
+    id: "limits",
+    theme: "teal" as const,
+    kicker: "Research direction",
+    title: "Intelligence Within Limits",
+    question:
+      "How can AI compute be planned under energy, water, climate, and carbon constraints without hiding burden-shifting?",
+    method:
+      "Candidate framing only. No theorem, no kg CO₂ estimate, no scored experiment on public energy datasets.",
+    status: "In development. Mathematical novelty and empirical findings have not yet been established.",
+    evidence: "No carbon or kWh result is reported on this site.",
+    links: [{ href: "/research/intelligence-within-limits", label: "Open the research brief" }],
+  },
+];

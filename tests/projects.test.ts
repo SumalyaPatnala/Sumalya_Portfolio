@@ -3,6 +3,7 @@ import {
   featuredProjects,
   filterProjects,
   getProject,
+  projectReadiness,
   projects,
   visionProjects,
 } from "@/content/projects";
@@ -113,6 +114,17 @@ describe("project catalog", () => {
     expect(project?.github).toBeUndefined();
     expect(project?.caseStudy.results.join(" ")).toMatch(/No benchmark results/i);
     expect(project?.inProgress?.join(" ")).toMatch(/not implemented/i);
+  });
+
+  it("distinguishes hosted demo, local prototype, and planned work", () => {
+    expect(projectReadiness(getProject("styleweave-vlm-lab")!)).toBe("planned");
+    expect(projectReadiness(getProject("worldsense-ai")!)).toBe("local-prototype");
+    expect(projectReadiness(getProject("ai-infrastructure-network-intelligence")!)).toBe(
+      "hosted-demo",
+    );
+    expect(projectReadiness(getProject("slm-finetuning-evaluation")!)).toBe(
+      "public-artifacts",
+    );
   });
 
   it("keeps WorldSense Phase 1 local and does not claim later modules", () => {

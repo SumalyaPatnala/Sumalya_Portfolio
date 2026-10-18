@@ -4,7 +4,7 @@ import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
 import { CodeSnippet } from "@/components/CodeSnippet";
 import { Container } from "@/components/Container";
 import { CopyLinkButton } from "@/components/CopyLinkButton";
-import { ProjectArt } from "@/components/ProjectArt";
+import { ProjectArt, artKindFor } from "@/components/ProjectArt";
 import { RoutingEvalTable } from "@/components/RoutingEvalTable";
 import { SlmEvalTable } from "@/components/SlmEvalTable";
 import { EvidenceBadge, StatusBadge } from "@/components/StatusBadge";
@@ -51,14 +51,16 @@ export default async function CaseStudyPage({
         <h1 className="display mt-4 max-w-4xl text-balance text-3xl sm:text-5xl">
           {project.title}
         </h1>
-        {project.art !== "none" ? (
-          <div className="mt-6 max-w-4xl">
-            <ProjectArt kind={project.art} className="aspect-[16/7]" />
-            <p className="mt-2 text-xs text-fg-faint">
-              Original placeholder illustration — not a product screenshot.
-            </p>
-          </div>
-        ) : null}
+        <div className="mt-6 max-w-4xl overflow-hidden rounded-[1.4rem]">
+          <ProjectArt
+            kind={artKindFor(project)}
+            theme={project.theme}
+            className="aspect-[16/7]"
+          />
+          <p className="mt-2 text-xs text-fg-faint">
+            Original placeholder illustration — not a product screenshot.
+          </p>
+        </div>
         <p className="mt-5 max-w-2xl text-lg text-fg-muted">{project.summary}</p>
         <div className="mt-5 flex flex-wrap gap-4 text-sm">
           {project.github ? (

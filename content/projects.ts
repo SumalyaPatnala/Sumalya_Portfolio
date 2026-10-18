@@ -930,6 +930,33 @@ export function visionProjects() {
     .filter((project): project is Project => Boolean(project?.vision));
 }
 
+export type ProjectReadiness =
+  | "hosted-demo"
+  | "local-prototype"
+  | "research"
+  | "planned"
+  | "public-artifacts"
+  | "professional";
+
+export const readinessLabels: Record<ProjectReadiness, string> = {
+  "hosted-demo": "Hosted demo",
+  "local-prototype": "Local prototype",
+  "research": "Research prototype",
+  "planned": "Planned",
+  "public-artifacts": "Public artifacts",
+  "professional": "Professional · generalized",
+};
+
+export function projectReadiness(project: Project): ProjectReadiness {
+  if (project.slug === "styleweave-vlm-lab") return "planned";
+  if (project.slug === "worldsense-ai") return "local-prototype";
+  if (project.slug === "agentic-soc-platform") return "local-prototype";
+  if (project.status === "academic-research") return "research";
+  if (project.status === "professional-generalized") return "professional";
+  if (project.demo) return "hosted-demo";
+  return "public-artifacts";
+}
+
 export function filterProjects(area?: string) {
   const filtered = !area
     ? projects

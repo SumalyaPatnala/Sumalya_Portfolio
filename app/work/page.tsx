@@ -13,8 +13,8 @@ export default function WorkPage() {
     <main id="main" tabIndex={-1}>
       <PageHeader
         kicker="Selected work"
-        title="Four public systems, then the rest of the work."
-        lede="The featured four tell one argument: adapt, serve, dispatch, then ground. Filters change the index, not the facts. Incomplete work is labeled. Professional work is generalized. Metrics appear only when an artifact exists."
+        title="Labs you can inspect, and work that is still a direction."
+        lede="Four public systems still tell one argument: adapt, serve, dispatch, then ground. Computer vision sits beside them, labeled as a local prototype or as planned. Filters change the index, not the facts. Metrics appear only when an artifact exists."
       />
       <WorkIndex />
     </main>
