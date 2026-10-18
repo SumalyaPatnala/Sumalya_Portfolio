@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import { site, storyBeats } from "@/content/site";
 
 describe("site copy", () => {
-  it("uses the four-system positioning line", () => {
+  it("uses the editorial hero without dropping the measurement tagline", () => {
+    expect(site.hero).toBe("Building AI that can see, reason, and create.");
+    expect(site.positioning).toMatch(/Computer Vision/);
     expect(site.tagline).toBe(
       "I build the measurement and routing layers that keep agentic systems honest.",
     );

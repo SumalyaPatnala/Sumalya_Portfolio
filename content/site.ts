@@ -9,6 +9,9 @@ export const site = {
   github: "https://github.com/SumalyaPatnala",
   githubHandle: "SumalyaPatnala",
   linkedin: "https://www.linkedin.com/in/sumalya-patnala",
+  hero: "Building AI that can see, reason, and create.",
+  positioning:
+    "AI/ML Engineering · Computer Vision · Multimodal AI · Reliable Intelligent Systems",
   tagline: "I build the measurement and routing layers that keep agentic systems honest.",
   philosophy: "Advance intelligence. Respect its footprint. Improve what comes next.",
   supporting:

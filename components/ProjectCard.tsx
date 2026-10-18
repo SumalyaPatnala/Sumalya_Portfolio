@@ -12,9 +12,18 @@ export function ProjectCard({
   featured?: boolean;
 }) {
   const evidence = project.evidence[0];
+  const ribbon: Record<typeof project.theme, string> = {
+    rose: "bg-rose",
+    coral: "bg-coral",
+    lavender: "bg-lavender",
+    teal: "bg-teal",
+    yellow: "bg-yellow",
+  };
 
   return (
-    <article className="panel flex h-full flex-col p-5">
+    <article className="panel flex h-full flex-col overflow-hidden p-0">
+      <div className={`h-2 ${ribbon[project.theme]}`} aria-hidden="true" />
+      <div className="flex flex-1 flex-col p-5">
       <div className="flex flex-wrap items-center gap-2">
         <StatusBadge label={project.statusLabel} status={project.status} />
       </div>
@@ -69,6 +78,7 @@ export function ProjectCard({
             {project.demo.label}
           </a>
         ) : null}
+      </div>
       </div>
     </article>
   );

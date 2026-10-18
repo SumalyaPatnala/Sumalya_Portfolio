@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Container } from "@/components/Container";
 import { CommandHint, CommandPalette } from "@/components/CommandPalette";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { mobileExtras, nav, site } from "@/content/site";
 import { cn } from "@/lib/cn";
 
@@ -55,6 +56,7 @@ export function Nav() {
           >
             Résumé
           </Link>
+          <ThemeToggle />
           <CommandHint />
         </nav>
         <button
@@ -99,6 +101,9 @@ export function Nav() {
             >
               GitHub
             </a>
+            <div className="py-2">
+              <ThemeToggle />
+            </div>
           </Container>
         </div>
       ) : null}

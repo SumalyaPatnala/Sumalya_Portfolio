@@ -2,12 +2,14 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { ContourMark } from "@/components/ContourMark";
 import { ProjectCard } from "@/components/ProjectCard";
-import { featuredProjects } from "@/content/projects";
+import { VisionCard } from "@/components/VisionCard";
+import { featuredProjects, visionProjects } from "@/content/projects";
 import { site, storyBeats } from "@/content/site";
 import { getNotes } from "@/lib/notes";
 
 export default function HomePage() {
   const featured = featuredProjects();
+  const vision = visionProjects();
   const notes = getNotes()
     .filter((note) => note.status === "published")
     .slice(0, 3);
@@ -20,50 +22,62 @@ export default function HomePage() {
           {site.location} · {site.role}
         </p>
         <p className="kicker sm:hidden">AI Engineer · Bay Area</p>
-        <h1 className="display mt-4 text-[2.35rem] leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.4rem] lg:whitespace-nowrap">
-          {site.name}
+        <h1 className="display mt-5 max-w-5xl text-[2.2rem] leading-[1.06] tracking-tight sm:text-5xl lg:text-[4.15rem]">
+          <span className="block font-sans text-base font-medium tracking-tight text-fg-muted sm:text-lg">
+            {site.name}
+          </span>
+          <span className="mt-3 block">{site.hero}</span>
         </h1>
-        <p className="mt-4 max-w-3xl text-base text-accent-soft sm:text-lg">
-          {site.role} at {site.employer}{" "}
-          <span className="text-fg-muted">({site.employerVia})</span>
+        <p className="mt-5 max-w-3xl font-mono text-[0.72rem] uppercase tracking-[0.14em] text-fg-muted sm:text-xs">
+          {site.positioning}
         </p>
-        <p className="mt-2 text-sm text-fg-muted">{site.headline}</p>
+        <p className="mt-4 max-w-3xl text-base text-fg-muted sm:text-lg">
+          {site.role} at {site.employer}{" "}
+          <span className="text-fg-faint">({site.employerVia})</span>
+        </p>
+        <p className="mt-1 text-sm text-fg-muted">{site.headline}</p>
         <p className="display mt-6 max-w-3xl text-2xl leading-snug text-fg sm:text-3xl">
           {site.tagline}
         </p>
         <p className="mt-4 max-w-2xl text-[0.98rem] text-fg-muted">{site.supporting}</p>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            href="/work"
-            className="rounded-full bg-accent px-5 py-2.5 text-sm text-bg"
-          >
-            Explore my work
+        <div className="reveal mt-8 flex flex-wrap gap-3">
+          <Link href="/work" className="btn-primary rounded-full px-5 py-2.5 text-sm">
+            Projects
           </Link>
-          <Link
-            href="/lab"
-            className="rounded-full border border-line px-5 py-2.5 text-sm"
-          >
-            Open Evaluation Workbench
+          <Link href="/research" className="btn-ghost rounded-full px-5 py-2.5 text-sm">
+            Research
           </Link>
           <a
             href={site.github}
-            className="rounded-full border border-line px-5 py-2.5 text-sm"
+            className="btn-ghost rounded-full px-5 py-2.5 text-sm"
             rel="noreferrer"
             target="_blank"
           >
-            View GitHub
+            GitHub
           </a>
-          <Link
-            href="/resume"
-            className="rounded-full border border-line px-5 py-2.5 text-sm"
-          >
+          <Link href="/resume" className="btn-ghost rounded-full px-5 py-2.5 text-sm">
+            Resume
+          </Link>
+          <Link href="/contact" className="btn-ghost rounded-full px-5 py-2.5 text-sm">
+            Contact
+          </Link>
+          <Link href="/work" className="sr-only">
+            Explore my work
+          </Link>
+          <Link href="/lab" className="btn-ghost rounded-full px-5 py-2.5 text-sm">
+            Open Evaluation Workbench
+          </Link>
+          <Link href="/resume" className="sr-only">
             Download résumé
           </Link>
+          <a href={site.github} className="sr-only" rel="noreferrer" target="_blank">
+            View GitHub
+          </a>
         </div>
 
-        <aside className="relative mt-10 overflow-hidden rounded-2xl border border-line px-5 py-5">
-          <ContourMark className="absolute inset-x-0 top-0 h-16 w-full opacity-80" />
+        <aside className="relative mt-10 overflow-hidden rounded-[1.6rem] border border-line bg-bg-elev px-5 py-6">
+          <ContourMark className="absolute inset-x-0 top-0 h-16 w-full opacity-70" />
           <p className="kicker relative">The argument</p>
           <p className="display relative mt-2 max-w-3xl text-xl italic text-fg sm:text-2xl">
             {site.story}
@@ -88,6 +102,30 @@ export default function HomePage() {
       </Container>
 
       <Container as="section" className="py-6">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h2 className="kicker">Computer vision</h2>
+            <p className="display mt-2 max-w-3xl text-3xl sm:text-4xl">
+              Two labs for seeing: fashion language, and video events.
+            </p>
+          </div>
+        </div>
+        <p className="mt-3 max-w-2xl text-sm text-fg-muted">
+          Planned work is labeled. WorldSense Phase 1 is local source, not a
+          hosted demo. StyleWeave has no repository yet.
+        </p>
+        <div className="mt-8 grid items-start gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+          {vision.map((project, index) => (
+            <VisionCard
+              key={project.slug}
+              project={project}
+              offset={index === 1}
+            />
+          ))}
+        </div>
+      </Container>
+
+      <Container as="section" className="py-6">
         <h2 className="kicker">Four systems, one story</h2>
         <p className="display mt-2 max-w-3xl text-3xl">
           Agents are only as honest as the objects they inherit.
@@ -97,7 +135,7 @@ export default function HomePage() {
             <Link
               key={beat.id}
               href={beat.href}
-              className="panel block p-5 transition-colors hover:border-accent/50"
+              className="panel block p-5 transition-colors hover:border-coral/50 hover:bg-rose/10"
             >
               <p className="font-mono text-xs text-fg-faint">{beat.step}</p>
               <h3 className="display mt-2 text-xl">{beat.title}</h3>
@@ -147,14 +185,14 @@ export default function HomePage() {
       <Container as="section" className="py-10">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2 className="kicker">Featured work</h2>
-            <p className="display mt-2 text-3xl">The four systems, with evidence attached.</p>
+            <h2 className="kicker">Reliable systems</h2>
+            <p className="display mt-2 text-3xl">The four public systems, with evidence attached.</p>
           </div>
           <Link href="/work" className="text-sm text-accent-soft">
             All projects
           </Link>
         </div>
-        <div className="mt-6 grid gap-4">
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
           {featured.map((project) => (
             <ProjectCard key={project.slug} project={project} featured />
           ))}

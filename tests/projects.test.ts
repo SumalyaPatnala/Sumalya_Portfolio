@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { featuredProjects, filterProjects, getProject, projects } from "@/content/projects";
+import {
+  featuredProjects,
+  filterProjects,
+  getProject,
+  projects,
+  visionProjects,
+} from "@/content/projects";
 
 describe("project catalog", () => {
   it("has unique slugs", () => {
@@ -99,6 +105,31 @@ describe("project catalog", () => {
     const project = getProject("slm-finetuning-evaluation");
     expect(project?.title).toBe("SLM Fine-Tuning & Evaluation");
     expect(project?.title).not.toMatch(/production/i);
+  });
+
+  it("labels StyleWeave as unimplemented with no metrics", () => {
+    const project = getProject("styleweave-vlm-lab");
+    expect(project?.status).toBe("personal-in-progress");
+    expect(project?.github).toBeUndefined();
+    expect(project?.caseStudy.results.join(" ")).toMatch(/No benchmark results/i);
+    expect(project?.inProgress?.join(" ")).toMatch(/not implemented/i);
+  });
+
+  it("keeps WorldSense Phase 1 local and does not claim later modules", () => {
+    const project = getProject("worldsense-ai");
+    expect(project?.status).toBe("personal-in-progress");
+    expect(project?.github).toBeUndefined();
+    const blob = [
+      project?.contribution,
+      project?.caseStudy.limitations.join(" "),
+      project?.inProgress?.join(" "),
+    ].join(" ");
+    expect(blob).toMatch(/not implemented/i);
+    expect(blob).toMatch(/SAM 2/);
+    expect(visionProjects().map((item) => item.slug)).toEqual([
+      "styleweave-vlm-lab",
+      "worldsense-ai",
+    ]);
   });
 
   it("does not claim MLflow is wired in the LLMOps serving path", () => {

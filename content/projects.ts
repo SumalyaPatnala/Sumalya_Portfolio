@@ -24,6 +24,9 @@ export type ProjectStatus =
 
 export type EvidenceKind = "repository" | "eval-artifact" | "resume" | "linkedin" | "none";
 
+export type ProjectTheme = "rose" | "coral" | "lavender" | "teal" | "yellow";
+export type ProjectArt = "weave" | "frames" | "none";
+
 export type Project = {
   slug: string;
   title: string;
@@ -37,13 +40,17 @@ export type Project = {
   status: ProjectStatus;
   statusLabel: string;
   featured: boolean;
+  vision?: boolean;
+  theme: ProjectTheme;
+  art: ProjectArt;
+  inProgress?: string[];
   github?: string;
   demo?: { href: string; label: string; note: string };
   evidence: {
     kind: EvidenceKind;
     statement: string;
   }[];
-  diagram: "router" | "slm" | "soc" | "multimodal" | "retrieval" | "llmops";
+  diagram: "router" | "slm" | "soc" | "multimodal" | "retrieval" | "llmops" | "weave" | "worldsense";
   caseStudy: {
     whyItMatters: string;
     constraints: string[];
@@ -66,6 +73,192 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    slug: "styleweave-vlm-lab",
+    title: "StyleWeave VLM Lab",
+    eyebrow: "Computer vision lab · not yet implemented",
+    summary:
+      "A planned fashion visual-search lab: open VLM adaptation, multimodal retrieval, tool use, and evaluation. No repository, demo, or benchmark exists yet. This card is a research direction, not a completed system.",
+    problem:
+      "Fashion search is usually a closed catalog model or a generic captioner. Neither is easy to inspect, adapt, or score on outfit compatibility, attribute grounding, and retrieval quality.",
+    contribution:
+      "Not implemented. The intended contribution is an open, evaluable visual-language loop for fashion search rather than a demo that hides the retriever.",
+    architectureSummary:
+      "Intended only: image/text query → open VLM adapter → multimodal retrieval → optional tools → scored answers. None of these stages have source in this portfolio yet.",
+    tech: ["Open VLMs (planned)", "Multimodal retrieval (planned)", "Evaluation harness (planned)"],
+    areas: ["research-ml", "evaluation"],
+    status: "personal-in-progress",
+    statusLabel: "In progress · no public repo, no metrics",
+    featured: false,
+    vision: true,
+    theme: "rose",
+    art: "weave",
+    inProgress: [
+      "Fashion visual search — not implemented",
+      "Open VLM adaptation — not implemented",
+      "Multimodal retrieval — not implemented",
+      "Tool use — not implemented",
+      "Evaluation harness — not implemented",
+    ],
+    evidence: [
+      {
+        kind: "none",
+        statement:
+          "No local or GitHub repository named StyleWeave was found while authoring this card. Do not read the feature list as shipped work.",
+      },
+    ],
+    diagram: "weave",
+    caseStudy: {
+      whyItMatters:
+        "Closed fashion models are hard to audit. An open VLM lab would make retrieval, attributes, and tool calls measurable before anyone treats the system as a product.",
+      constraints: [
+        "No licensed catalog is attached to this site.",
+        "No fabricated retrieval or VLM scores.",
+        "Public copy must stay in the future tense until code exists.",
+      ],
+      architecture: [
+        "Planned query encoder for image and text.",
+        "Planned open-weight VLM adapter, not a hidden API wrapper.",
+        "Planned retrieval index with an evaluation split.",
+        "Planned tool interface for catalog attributes — not built.",
+      ],
+      decisions: [
+        {
+          title: "Name the gap instead of mocking a demo",
+          body: "A colorful card without a repo is still more honest than a fake screenshot of visual search.",
+        },
+        {
+          title: "Evaluation before tool use",
+          body: "Tool-calling fashion agents without a retrieval metric would repeat the orchestration-before-measurement mistake already documented on this site.",
+        },
+      ],
+      implementation: [
+        "No implementation in this repository or in a linked public repo.",
+      ],
+      evaluation:
+        "No evaluation methodology has been run. There is no nDCG, recall@k, attribute accuracy, or human rater study to report.",
+      results: [
+        "No benchmark results. The honest result is that the lab has not started as code.",
+      ],
+      limitations: [
+        "No source, no weights, no demo URL.",
+        "Fashion imagery on this site is original geometric art, not product photography.",
+      ],
+      next: [
+        "Stand up a repository with a frozen eval split before training anything.",
+        "Adapt an open VLM with a documented license.",
+        "Add retrieval and tool-use traces that the Evaluation Workbench can import.",
+      ],
+      reproduce: [
+        "Not reproducible. There is no public code path.",
+      ],
+    },
+  },
+  {
+    slug: "worldsense-ai",
+    title: "WorldSense AI",
+    eyebrow: "Computer vision lab · Phase 1 local",
+    summary:
+      "A local video-perception lab: upload an MP4, run real TorchVision detection, keep persistent track IDs, and emit polygonal ROI enter/exit events with evidence frames. Not hosted. Not a cloud product.",
+    problem:
+      "Most perception demos either fake boxes or hide the timestamp. Operators cannot replay why an object entered a region, which model ran, or whether IDs survived a brief occlusion.",
+    contribution:
+      "Implemented a Phase 1 vertical slice locally: MP4 ingest, pretrained Faster R-CNN (MobileNetV3-Large FPN, COCO weights), an in-repo BYTE-style tracker, polygon ROI with hysteresis, FastAPI + Next.js overlays, SQLite provenance, and tests. SAM 2, VGGT, VQA, Kafka, LangGraph, ONNX, and cloud deploy are not implemented.",
+    architectureSummary:
+      "MP4 → sampled frames → TorchVision Faster R-CNN → BYTE-style IDs → polygon ROI monitor → SQLite + evidence JPEGs → Next.js playback.",
+    tech: [
+      "Python 3.12",
+      "PyTorch / TorchVision",
+      "Faster R-CNN MobileNetV3 FPN",
+      "OpenCV",
+      "FastAPI",
+      "Next.js",
+      "SQLite",
+      "pytest",
+    ],
+    areas: ["research-ml", "ai-infrastructure", "evaluation"],
+    status: "personal-in-progress",
+    statusLabel: "In progress · local Phase 1, no public GitHub",
+    featured: false,
+    vision: true,
+    theme: "teal",
+    art: "frames",
+    inProgress: [
+      "SAM 2 segmentation — not in Phase 1",
+      "VGGT / 3D reconstruction — not in Phase 1",
+      "VQA over events — not in Phase 1",
+      "Kafka, LangGraph, ONNX, cloud deploy — not in Phase 1",
+    ],
+    evidence: [
+      {
+        kind: "none",
+        statement:
+          "Local repository at WorldSense-AI. No public GitHub remote. Detector weights are TorchVision COCO checkpoints downloaded to the machine cache, not stored in git.",
+      },
+    ],
+    diagram: "worldsense",
+    caseStudy: {
+      whyItMatters:
+        "Video events are only useful if a later viewer can seek to the evidence frame and see the same boxes, IDs, and ROI the system logged.",
+      constraints: [
+        "Local inference only. No paid cloud APIs.",
+        "Real pretrained detections — no synthetic boxes in the product path.",
+        "Apache-2.0 application code; do not pull AGPL YOLO.",
+        "Do not commit uploads, weights, or .venv.",
+      ],
+      architecture: [
+        "FastAPI upload checks MP4 ftyp magic and an 80 MB cap.",
+        "Frames are sampled with timestamps; JPEGs are stored as evidence.",
+        "Detector: torchvision.models.detection.fasterrcnn_mobilenet_v3_large_fpn, COCO_V1 weights.",
+        "Tracker: in-repo BYTE-style two-stage association with stable IDs — not the official ByteTrack package.",
+        "ROI: ray-casting polygon test on the track centroid, with hysteresis so enter/exit fire once per occupancy change.",
+      ],
+      decisions: [
+        {
+          title: "CPU default even though MPS is available",
+          body: "On Apple M3 Pro, warm Faster R-CNN inference measured about 50 s/frame on MPS versus about 200 ms/frame on CPU for the same boxes. MPS is available and not compatible for this detector. WORLD_SENSE_DEVICE=mps remains an experiment override.",
+        },
+        {
+          title: "BSD TorchVision instead of AGPL YOLO",
+          body: "Phase 1 prefers a weight set the lab can document. Ultralytics YOLO is out of scope for licensing, not for accuracy theater.",
+        },
+        {
+          title: "Geometry tests are not inference proof",
+          body: "Tracker and ROI unit tests use synthetic boxes. The only test allowed to speak about detector output is the optional real-MP4 job.",
+        },
+      ],
+      implementation: [
+        "Backend: detector, tracker, ROI monitor, SQLite store, FastAPI /v1/health /videos /analyze /jobs /overlays /events.",
+        "Frontend: Next.js playback, detection overlay, ROI polygon clicks, event timeline seek.",
+        "Logs are structured JSON. Jobs store wall_ms, mean_infer_ms, device, and hardware metadata.",
+      ],
+      evaluation:
+        "Contract tests cover tracker ID persistence, polygon occupancy, MP4 magic bytes, and API 400/404 paths without downloading weights. Optional WORLD_SENSE_RUN_INFERENCE=1 runs a real MP4 through analyze. Empty detections on a clip with no COCO objects are treated as valid, not as a failed demo.",
+      results: [
+        "Phase 1 source exists locally with unit tests for tracker, ROI, media, and API contract.",
+        "Device policy is measured, not hoped: MPS available, CPU selected for this detector.",
+        "No public hosted demo. No claimed mAP on a labeled benchmark.",
+      ],
+      limitations: [
+        "No public GitHub URL at the time this card was written.",
+        "Faster R-CNN COCO is a starting detector, not a custom trained model.",
+        "The tracker is a BYTE-style equivalent, not a paper reproduction with MOT metrics.",
+        "SAM 2, VGGT, VQA, Kafka, LangGraph, ONNX export, and deploy are explicitly out of Phase 1.",
+      ],
+      next: [
+        "Publish the repository when the local slice is frozen.",
+        "Add a labeled clip protocol before claiming tracking accuracy.",
+        "Keep later modules behind interfaces until Phase 1 provenance is stable.",
+      ],
+      reproduce: [
+        "Requires the local WorldSense-AI checkout, Homebrew Python 3.12, and a project-local .venv.",
+        "pip install -r requirements.txt, then PYTHONPATH=. uvicorn backend.app.main:app --host 127.0.0.1 --port 8000.",
+        "cd web && npm install && npm run dev.",
+        "Optional inference: WORLD_SENSE_RUN_INFERENCE=1 WORLD_SENSE_SAMPLE_MP4=/path/to/clip.mp4 pytest backend/tests/test_api_inference.py.",
+        "This website does not run the detector.",
+      ],
+    },
+  },
   {
     slug: "ai-infrastructure-network-intelligence",
     title: "AI Infrastructure & Network Intelligence",
@@ -92,6 +285,8 @@ export const projects: Project[] = [
     status: "personal-complete-artifacts",
     statusLabel: "Personal project · hosted demo; GitHub main behind the live revision",
     featured: true,
+    theme: "teal",
+    art: "none",
     github:
       "https://github.com/SumalyaPatnala/agentic-ai-infrastructure-network-intelligence",
     demo: {
@@ -229,6 +424,8 @@ export const projects: Project[] = [
     status: "personal-complete-artifacts",
     statusLabel: "Personal project · leaked N=4 CSV + held-out N=13",
     featured: true,
+    theme: "yellow",
+    art: "none",
     github:
       "https://github.com/SumalyaPatnala/sdg-community-assistant/tree/main/03_slm_finetuning_evaluation",
     evidence: [
@@ -358,6 +555,8 @@ export const projects: Project[] = [
     status: "personal-in-progress",
     statusLabel: "In progress · Milestone 5 (local Kafka); no LLM layer yet",
     featured: true,
+    theme: "coral",
+    art: "none",
     github: "https://github.com/SumalyaPatnala/agentic-soc-platform",
     evidence: [
       {
@@ -458,6 +657,8 @@ export const projects: Project[] = [
     status: "academic-research",
     statusLabel: "Academic research prototype · not a verified publication",
     featured: false,
+    theme: "rose",
+    art: "none",
     github: "https://github.com/SumalyaPatnala/Social_Innovation_Research_With_LLMS",
     evidence: [
       {
@@ -554,6 +755,8 @@ export const projects: Project[] = [
     status: "professional-generalized",
     statusLabel: "Professional experience · non-confidential architecture only",
     featured: false,
+    theme: "lavender",
+    art: "none",
     evidence: [
       {
         kind: "resume",
@@ -633,6 +836,8 @@ export const projects: Project[] = [
     status: "personal-complete-artifacts",
     statusLabel: "Personal project · serving code in the SDG repo",
     featured: true,
+    theme: "lavender",
+    art: "none",
     github:
       "https://github.com/SumalyaPatnala/sdg-community-assistant/tree/main/02_llmops_local_hybrid_inference",
     evidence: [
@@ -715,6 +920,14 @@ export function featuredProjects() {
   return featuredOrder
     .map((slug) => projects.find((project) => project.slug === slug))
     .filter((project): project is Project => Boolean(project?.featured));
+}
+
+export const visionOrder = ["styleweave-vlm-lab", "worldsense-ai"] as const;
+
+export function visionProjects() {
+  return visionOrder
+    .map((slug) => projects.find((project) => project.slug === slug))
+    .filter((project): project is Project => Boolean(project?.vision));
 }
 
 export function filterProjects(area?: string) {

@@ -17,6 +17,10 @@ const captions: Record<Variant, string> = {
     "Parse and chunk, lexical and/or vector retrieve, generate with citations, score overlap and latency — architecture only.",
   llmops:
     "POST /infer → ModelRouter (adapter, Ollama, remote) with the model that actually ran written to JSONL.",
+  weave:
+    "Intended StyleWeave loop only: image/text query → open VLM adapter → retrieval → tools → eval. Not implemented.",
+  worldsense:
+    "MP4 → sampled frames → Faster R-CNN → BYTE-style IDs → polygon ROI events → SQLite evidence. Local Phase 1.",
 };
 
 function Box({
@@ -42,15 +46,15 @@ function Box({
         width={w}
         height={h}
         rx="7"
-        fill={accent ? "#24352c" : "#141a17"}
-        stroke={accent ? "#c9844a" : "rgba(243,239,230,0.28)"}
+        fill={accent ? "var(--diagram-fill-accent)" : "var(--diagram-fill)"}
+        stroke={accent ? "var(--diagram-arrow)" : "var(--diagram-stroke)"}
         strokeWidth="1.2"
       />
       <text
         x={x + w / 2}
         y={y + h / 2 + 4}
         textAnchor="middle"
-        fill="#f3efe6"
+        fill="var(--diagram-text)"
         fontSize="13"
         fontFamily="ui-sans-serif, system-ui"
       >
@@ -77,7 +81,7 @@ function Arrow({
       y1={y1}
       x2={x2}
       y2={y2}
-      stroke="#c9844a"
+      stroke="var(--diagram-arrow)"
       strokeOpacity="0.55"
       strokeWidth="1.4"
       markerEnd="url(#arrowhead)"
@@ -113,7 +117,7 @@ function SvgFrame({
           refY="3"
           orient="auto"
         >
-          <path d="M0,0 L0,6 L8,3 z" fill="#c9844a" fillOpacity="0.7" />
+          <path d="M0,0 L0,6 L8,3 z" fill="var(--diagram-arrow)" fillOpacity="0.85" />
         </marker>
       </defs>
       {children}
@@ -135,7 +139,7 @@ function RouterDiagram() {
             x={160}
             y={188}
             textAnchor="middle"
-            fill="#b4ada0"
+            fill="var(--diagram-muted)"
             fontSize="12"
             fontFamily="ui-monospace, monospace"
           >
@@ -160,7 +164,7 @@ function RouterDiagram() {
             x={315}
             y={158}
             textAnchor="middle"
-            fill="#b4ada0"
+            fill="var(--diagram-muted)"
             fontSize="11"
             fontFamily="ui-monospace, monospace"
           >
@@ -197,7 +201,7 @@ function SlmDiagram() {
         x={216}
         y={216}
         textAnchor="middle"
-        fill="#b4ada0"
+        fill="var(--diagram-muted)"
         fontSize="11"
         fontFamily="ui-monospace, monospace"
       >
@@ -226,7 +230,7 @@ function SocDiagram() {
         x={346}
         y={132}
         textAnchor="middle"
-        fill="#b4ada0"
+        fill="var(--diagram-muted)"
         fontSize="11"
         fontFamily="ui-monospace, monospace"
       >
@@ -249,10 +253,10 @@ function MultimodalDiagram() {
       <Box x={12} y={84} w={88} h={32} label="Video" />
       <Box x={12} y={152} w={88} h={32} label="Audio" />
       <Arrow x1={100} y1={100} x2={132} y2={100} />
-      <text x={110} y={72} fill="#b4ada0" fontSize="12" fontFamily="ui-sans-serif">
+      <text x={110} y={72} fill="var(--diagram-muted)" fontSize="12" fontFamily="ui-sans-serif">
         BLIP
       </text>
-      <text x={104} y={148} fill="#b4ada0" fontSize="12" fontFamily="ui-sans-serif">
+      <text x={104} y={148} fill="var(--diagram-muted)" fontSize="12" fontFamily="ui-sans-serif">
         Whisper
       </text>
       <Box x={132} y={80} w={88} h={40} label="Chunks" />
@@ -285,6 +289,40 @@ function RetrievalDiagram() {
   );
 }
 
+function WeaveDiagram() {
+  return (
+    <SvgFrame variant="weave" width={640} height={168}>
+      <Box x={12} y={64} w={100} h={40} label="Query" />
+      <Arrow x1={112} y1={84} x2={140} y2={84} />
+      <Box x={140} y={64} w={110} h={40} label="Open VLM" />
+      <Arrow x1={250} y1={84} x2={278} y2={84} />
+      <Box x={278} y={56} w={120} h={56} label="Retrieval" accent />
+      <Arrow x1={398} y1={84} x2={426} y2={84} />
+      <Box x={426} y={64} w={80} h={40} label="Tools" />
+      <Arrow x1={506} y1={84} x2={534} y2={84} />
+      <Box x={534} y={64} w={94} h={40} label="Eval" />
+    </SvgFrame>
+  );
+}
+
+function WorldSenseDiagram() {
+  return (
+    <SvgFrame variant="worldsense" width={640} height={168}>
+      <Box x={12} y={64} w={72} h={40} label="MP4" />
+      <Arrow x1={84} y1={84} x2={110} y2={84} />
+      <Box x={110} y={64} w={88} h={40} label="Frames" />
+      <Arrow x1={198} y1={84} x2={224} y2={84} />
+      <Box x={224} y={56} w={120} h={56} label="Faster R-CNN" accent />
+      <Arrow x1={344} y1={84} x2={370} y2={84} />
+      <Box x={370} y={64} w={88} h={40} label="Track IDs" />
+      <Arrow x1={458} y1={84} x2={484} y2={84} />
+      <Box x={484} y={64} w={64} h={40} label="ROI" />
+      <Arrow x1={548} y1={84} x2={568} y2={84} />
+      <Box x={568} y={64} w={64} h={40} label="Store" />
+    </SvgFrame>
+  );
+}
+
 function LlmopsDiagram() {
   return (
     <SvgFrame variant="llmops" width={640} height={200}>
@@ -312,6 +350,8 @@ const diagrams: Record<Variant, () => ReactNode> = {
   multimodal: MultimodalDiagram,
   retrieval: RetrievalDiagram,
   llmops: LlmopsDiagram,
+  weave: WeaveDiagram,
+  worldsense: WorldSenseDiagram,
 };
 
 export function ArchitectureDiagram({
