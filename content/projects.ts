@@ -26,11 +26,13 @@ export type EvidenceKind = "repository" | "eval-artifact" | "resume" | "linkedin
 
 export type ProjectTheme = "rose" | "coral" | "lavender" | "teal" | "yellow";
 export type ProjectArt = "weave" | "frames" | "none";
+export type ProjectAspect = "4:5" | "3:4" | "16:9";
 
 export type Project = {
   slug: string;
   title: string;
   eyebrow: string;
+  lede: string;
   summary: string;
   problem: string;
   contribution: string;
@@ -41,8 +43,12 @@ export type Project = {
   statusLabel: string;
   featured: boolean;
   vision?: boolean;
+  spotlight?: boolean;
   theme: ProjectTheme;
   art: ProjectArt;
+  cover: string;
+  coverAlt: string;
+  aspect: ProjectAspect;
   inProgress?: string[];
   github?: string;
   demo?: { href: string; label: string; note: string };
@@ -50,7 +56,7 @@ export type Project = {
     kind: EvidenceKind;
     statement: string;
   }[];
-  diagram: "router" | "slm" | "soc" | "multimodal" | "retrieval" | "llmops" | "weave" | "worldsense";
+  diagram: "router" | "slm" | "soc" | "multimodal" | "retrieval" | "llmops" | "weave" | "worldsense" | "movies";
   caseStudy: {
     whyItMatters: string;
     question: string;
@@ -63,6 +69,7 @@ export type Project = {
     limitations: string[];
     next: string[];
     reproduce: string[];
+    plannedRoadmap?: { title: string; items: string[] };
     responsibility?: {
       utility: string;
       reliability: string;
@@ -77,83 +84,106 @@ export const projects: Project[] = [
   {
     slug: "styleweave-vlm-lab",
     title: "StyleWeave VLM Lab",
-    eyebrow: "Computer vision lab · not yet implemented",
+    eyebrow: "Fashion discovery · composed image retrieval · VLM research",
+    lede: "Phase 0 research documentation for fashion discovery and composed image retrieval. No training, metrics, or interface yet.",
     summary:
-      "A planned fashion visual-search lab: open VLM adaptation, multimodal retrieval, tool use, and evaluation. No repository, demo, or benchmark exists yet. This card is a research direction, not a completed system.",
+      "A public research lab on composed fashion retrieval: can explicit visual attribute constraints and a small fusion module improve FashionIQ while keeping explanations visually grounded? Phase 0 documentation is complete. The frozen CLIP baseline has not been evaluated.",
     problem:
       "Fashion search is usually a closed catalog model or a generic captioner. Neither is easy to inspect, adapt, or score on outfit compatibility, attribute grounding, and retrieval quality.",
     contribution:
-      "Not implemented. The intended contribution is an open, evaluable visual-language loop for fashion search rather than a demo that hides the retriever.",
+      "Authored a Phase 0 research packet in a public repository: hardware feasibility, literature review, pre-registered hypotheses, dataset audit, model selection, experiment plan, and resource budget. This is documentation and protocol design, not a trained VLM.",
     architectureSummary:
-      "Intended only: image/text query → open VLM adapter → multimodal retrieval → optional tools → scored answers. None of these stages have source in this portfolio yet.",
-    tech: ["Open VLMs (planned)", "Multimodal retrieval (planned)", "Evaluation harness (planned)"],
+      "Documented loop only until Phase 1 runs: image/text query with preserve/change/avoid attributes → frozen CLIP baseline (planned) → optional Combiner fusion → explanations. No metrics.json exists yet.",
+    tech: ["CLIP (planned)", "FashionIQ (planned)", "PyTorch (planned)", "Phase 0 docs"],
     areas: ["research-ml", "evaluation"],
     status: "personal-in-progress",
-    statusLabel: "In progress · no public repo, no metrics",
+    statusLabel: "Phase 0 research · no metrics",
     featured: false,
     vision: true,
+    spotlight: true,
     theme: "rose",
     art: "weave",
+    cover: "/work/styleweave-cover.jpg",
+    coverAlt:
+      "Original editorial illustration of a fashion mood board with woven fabrics, color chips, and empty frames. Not a product screenshot or retrieval result.",
+    aspect: "4:5",
     inProgress: [
-      "Fashion visual search — not implemented",
-      "Open VLM adaptation — not implemented",
-      "Multimodal retrieval — not implemented",
-      "Tool use — not implemented",
-      "Evaluation harness — not implemented",
+      "Frozen CLIP baseline on FashionIQ — not evaluated",
+      "Trainable fusion + contrastive training — not started",
+      "Qwen3-VL-2B generative / tool-use — deferred",
+      "Counterfactual + ablation evaluation — not started",
+      "Next.js research interface — blocked until Phase 1 artifacts",
     ],
+    github: "https://github.com/SumalyaPatnala/styleweave-vlm-lab",
     evidence: [
+      {
+        kind: "repository",
+        statement:
+          "Public repository styleweave-vlm-lab on GitHub. README states Phase 0 documentation is complete and that no model training has been run. Phase 1 frozen CLIP baseline evaluation has not produced metrics.",
+      },
       {
         kind: "none",
         statement:
-          "No local or GitHub repository named StyleWeave was found while authoring this card. Do not read the feature list as shipped work.",
+          "No nDCG, Recall@K, training curves, or deployed research UI. Fashion imagery on this site is an original illustration, not FashionIQ evidence.",
       },
     ],
     diagram: "weave",
     caseStudy: {
       whyItMatters:
-        "Closed fashion models are hard to audit. An open VLM lab would make retrieval, attributes, and tool calls measurable before anyone treats the system as a product.",
+        "Closed fashion models are hard to audit. An open protocol would make retrieval, attributes, and explanations measurable before anyone treats the system as a product.",
       question:
-        "Can an open VLM lab make fashion retrieval, attributes, and tool calls measurable before anyone treats the system as a product?",
+        "Can explicit visual attribute constraints and a small learned fusion module improve FashionIQ composed retrieval while keeping explanations visually grounded?",
       constraints: [
-        "No licensed catalog is attached to this site.",
         "No fabricated retrieval or VLM scores.",
-        "Public copy must stay in the future tense until code exists.",
+        "FashionIQ official test labels are unpublished — report on the official val split if Phase 1 runs.",
+        "Do not claim visual-encoder fine-tuning if only language-side modules are trained.",
+        "No licensed catalog is attached to this portfolio site.",
       ],
       architecture: [
-        "Planned query encoder for image and text.",
-        "Planned open-weight VLM adapter, not a hidden API wrapper.",
-        "Planned retrieval index with an evaluation split.",
-        "Planned tool interface for catalog attributes — not built.",
+        "Phase 0 packet: hardware_feasibility, literature_review, research_hypothesis, dataset_audit, model_selection, experiment_plan, resource_budget.",
+        "Intended Phase 1: frozen CLIP sum baseline (B0) before Combiner (M0) or attribute slots (M1).",
+        "Qwen3-VL-2B is deferred unless re-approved against the local memory cap.",
+        "A Next.js research UI is blocked until real Phase 1 artifacts exist.",
       ],
       decisions: [
         {
-          title: "Name the gap instead of mocking a demo",
-          body: "A colorful card without a repo is still more honest than a fake screenshot of visual search.",
+          title: "Write the protocol before claiming a model",
+          body: "The public repo leads with pre-registered hypotheses and a dataset audit. That is the contribution of Phase 0.",
         },
         {
-          title: "Evaluation before tool use",
-          body: "Tool-calling fashion agents without a retrieval metric would repeat the orchestration-before-measurement mistake already documented on this site.",
+          title: "FashionIQ val, not unpublished test",
+          body: "The dataset audit forbids reporting on the official test split because labels are unpublished.",
+        },
+        {
+          title: "B0 before H1",
+          body: "The hypothesis document states that a frozen-sum CLIP baseline must exist before Combiner gains can be claimed. That baseline has not been evaluated here.",
         },
       ],
       implementation: [
-        "No implementation in this repository or in a linked public repo.",
+        "Public docs and supporting notes under docs/ and docs/phase0/.",
+        "Research hypothesis H1–H4 are pre-registered and untested.",
+        "No trained weights, no metrics.json, and no hosted interface in this portfolio.",
       ],
       evaluation:
-        "No evaluation methodology has been run. There is no nDCG, recall@k, attribute accuracy, or human rater study to report.",
+        "No evaluation methodology has been run to completion. There is no Recall@K, nDCG, attribute accuracy, or human rater study to report from this lab yet.",
       results: [
-        "No benchmark results. The honest result is that the lab has not started as code.",
+        "Phase 0 documentation is complete and public.",
+        "No benchmark results. Do not read the planned methodology as a completed VLM implementation.",
       ],
       limitations: [
-        "No source, no weights, no demo URL.",
-        "Fashion imagery on this site is original geometric art, not product photography.",
+        "Frozen CLIP baseline evaluation has not been run.",
+        "No demo URL.",
+        "Portfolio fashion imagery is original illustration, not catalog photography or FashionIQ samples.",
       ],
       next: [
-        "Stand up a repository with a frozen eval split before training anything.",
-        "Adapt an open VLM with a documented license.",
-        "Add retrieval and tool-use traces that the Evaluation Workbench can import.",
+        "Run the frozen CLIP baseline on FashionIQ val and write metrics.json from evaluation code.",
+        "Only then compare Combiner and attribute-conditioned variants under the same protocol.",
+        "Keep the research interface behind real artifacts.",
       ],
       reproduce: [
-        "Not reproducible. There is no public code path.",
+        "Clone https://github.com/SumalyaPatnala/styleweave-vlm-lab.",
+        "Read README.md and the Phase 0 packet under docs/ before assuming any model exists.",
+        "This website does not download FashionIQ or CLIP weights.",
       ],
     },
   },
@@ -161,6 +191,7 @@ export const projects: Project[] = [
     slug: "worldsense-ai",
     title: "WorldSense AI",
     eyebrow: "Computer vision lab · Phase 1 local",
+    lede: "Local video perception: real detections, persistent IDs, and ROI events you can replay.",
     summary:
       "A local video-perception lab: upload an MP4, run real TorchVision detection, keep persistent track IDs, and emit polygonal ROI enter/exit events with evidence frames. Not hosted. Not a cloud product.",
     problem:
@@ -184,8 +215,13 @@ export const projects: Project[] = [
     statusLabel: "In progress · local Phase 1, no public GitHub",
     featured: false,
     vision: true,
+    spotlight: true,
     theme: "teal",
     art: "frames",
+    cover: "/work/worldsense-cover.jpg",
+    coverAlt:
+      "Original illustration of a dusk city street with abstract detection boxes and tracking paths. Not a detector screenshot or labeled benchmark.",
+    aspect: "16:9",
     inProgress: [
       "SAM 2 segmentation — not in Phase 1",
       "VGGT / 3D reconstruction — not in Phase 1",
@@ -265,8 +301,128 @@ export const projects: Project[] = [
     },
   },
   {
+    slug: "movie-discovery-recommendation",
+    title: "Movie Discovery & Recommendation System",
+    eyebrow: "Content-based recommendation · Flask",
+    lede: "A cinematic movie-discovery UI over CountVectorizer cosine similarity. Not Netflix. Not collaborative filtering.",
+    summary:
+      "A Flask app that recommends similar titles from a frozen movie CSV using bag-of-words CountVectorizer and cosine similarity, then enriches the page with TMDB metadata and IMDb reviews. Public source exists. No live production deployment is claimed here.",
+    problem:
+      "Choosing a next film from a large catalog is slow if the only interface is keyword search. A content-based neighbor list can surface titles that share cast, director, and genre without needing a user-history graph.",
+    contribution:
+      "Implemented a content-based recommender in RecommendationSystem: load main_data2021.csv, vectorize the combined metadata field `comb`, rank cosine neighbors, and render a detail page. Display metadata and posters are fetched from TMDB in the browser; review text is scraped from IMDb and labeled by a pickled classifier.",
+    architectureSummary:
+      "Browser autocomplete → Flask /similarity (CountVectorizer + cosine similarity on a frozen CSV) → TMDB REST for posters and details → Flask /recommend page with IMDb review scrape and a pickled sentiment model.",
+    tech: ["Flask", "scikit-learn", "CountVectorizer", "cosine similarity", "pandas", "TMDB API", "BeautifulSoup"],
+    areas: ["research-ml", "full-stack"],
+    status: "personal-complete-artifacts",
+    statusLabel: "Public source · content-based baseline, no live deploy claimed",
+    featured: false,
+    spotlight: true,
+    theme: "coral",
+    art: "none",
+    cover: "/work/movies-cover.jpg",
+    coverAlt:
+      "Original illustration of a cinema interior with a projector beam and abstract film frames. Not a Netflix interface and not a real movie poster.",
+    aspect: "16:9",
+    github: "https://github.com/SumalyaPatnala/RecommendationSystem",
+    evidence: [
+      {
+        kind: "repository",
+        statement:
+          "Public GitHub RecommendationSystem: Flask routes in main.py, CountVectorizer cosine similarity over main_data2021.csv, templates/home.html and recommend.html, TMDB client calls in static/recommend.js, pickled nlp_model.pkl / tranform.pkl for review polarity.",
+      },
+      {
+        kind: "none",
+        statement:
+          "No offline ranking metrics (MAP, nDCG, Recall@K) are checked into the repository. This site does not claim a current hosted URL, collaborative filtering, embeddings, or Netflix viewing data.",
+      },
+    ],
+    diagram: "movies",
+    caseStudy: {
+      whyItMatters:
+        "Most “recommendation” demos hide whether neighbors come from content, collaboration, or a hosted ranking API. A CSV plus cosine similarity is inspectable: you can see the features.",
+      question:
+        "If the only user action is picking a title, can bag-of-words cosine neighbors on cast, director, and genre produce a usable discovery list without a personalization graph?",
+      constraints: [
+        "The catalog is a frozen CSV, not a live licensed feed.",
+        "Do not claim Netflix proprietary ranking or viewing history.",
+        "Do not invent recommendation benchmarks.",
+        "TMDB metadata is display enrichment, not the similarity engine.",
+      ],
+      architecture: [
+        "main_data2021.csv columns include director_name, three actor fields, genres, movie_title, and comb (a concatenated bag-of-words string).",
+        "create_similarity() fits sklearn CountVectorizer on comb and computes cosine_similarity.",
+        "rcmd() returns the next ten neighbors, excluding the query title.",
+        "static/recommend.js looks up the query on TMDB for posters, overview, rating, runtime, and cast, then POSTs /recommend.",
+        "/recommend scrapes IMDb review text and classifies each with a pickled model (nlp_model.pkl + tranform.pkl).",
+      ],
+      decisions: [
+        {
+          title: "Content features instead of user-user collaboration",
+          body: "Similarity is computed from metadata strings. There is no user-item matrix in this repository.",
+        },
+        {
+          title: "Separate display metadata from the ranking features",
+          body: "Posters and synopses come from TMDB at request time. Neighbors come from the local CSV. Those two sources can disagree.",
+        },
+        {
+          title: "Keep the baseline small enough to inspect",
+          body: "CountVectorizer plus cosine similarity is the entire ranker. That is a limitation and a virtue.",
+        },
+      ],
+      implementation: [
+        "Flask 1.x app with /home, POST /similarity, POST /recommend.",
+        "Autocomplete suggestions are the capitalized titles from the CSV.",
+        "requirements.txt also lists tmdbv3api, gunicorn, and BeautifulSoup. A Procfile exists for a process host; this portfolio does not treat that as a verified live deployment.",
+        "The HTML footer in the inspected templates credits a third-party UI author. The GitHub repository under SumalyaPatnala is the evidence source for this write-up.",
+      ],
+      evaluation:
+        "No recommendation-ranking evaluation is in the repository: no held-out users, no MAP/nDCG, no A/B. Review polarity is a pickled classifier run on scraped IMDb text at request time, not a published sentiment benchmark.",
+      results: [
+        "A working content-based neighbor function exists in source and can return ten titles or a not-in-database message.",
+        "The UI can show TMDB posters and scraped reviews when those remote calls succeed.",
+        "No production SLA, no live catalog refresh, and no claimed ranking metric.",
+      ],
+      limitations: [
+        "Catalog staleness: main_data2021.csv is a snapshot, not a licensed daily feed.",
+        "CountVectorizer neighbors ignore plot embeddings, watch history, and popularity.",
+        "TMDB lookups and IMDb scraping depend on third-party HTML/API stability and terms.",
+        "A TMDB API key is embedded in public frontend JavaScript — a credential-hygiene issue, not a product feature. The key is not copied here.",
+        "Synchronous AJAX fan-out for posters and cast is fragile.",
+        "No authenticated users, favorites, or feedback loop.",
+      ],
+      next: [
+        "Do not start the full-stack rebuild until StyleWeave Phase 1 artifacts exist, per the lab sequence on this site.",
+        "When that gate opens, replace the Flask UI with the planned Next.js + FastAPI path documented below — still as Planned work, not as current source.",
+      ],
+      reproduce: [
+        "Clone https://github.com/SumalyaPatnala/RecommendationSystem.",
+        "Create a virtualenv and pip install -r requirements.txt (legacy Flask 1.1 pins may need a dedicated environment).",
+        "Run python main.py and open the local Flask URL.",
+        "TMDB calls require a key the operator owns; do not reuse secrets from the public JavaScript file.",
+        "This website does not run the recommender.",
+      ],
+      plannedRoadmap: {
+        title: "Planned full-stack extension (after StyleWeave)",
+        items: [
+          "Planned: Next.js + React frontend for search, filters, lists, favorites, and explanations.",
+          "Planned: FastAPI backend with PostgreSQL for users, movies, feedback, and interactions.",
+          "Planned: licensed metadata sync (for example TMDB) on a schedule, with caching and required attribution — public metadata, not Netflix viewing data.",
+          "Planned: keep the CountVectorizer cosine baseline as a documented control.",
+          "Planned: embedding-powered semantic similarity once a frozen text/poster pipeline exists.",
+          "Planned: collaborative filtering only after enough suitable interaction data exists; do not fake a user graph.",
+          "Planned: hybrid retrieval and ranking with explainable neighbor reasons.",
+          "Planned: offline evaluation with reproducible splits and baselines before claiming quality.",
+          "Planned: deployment and observability after the system is implemented — not claimed now.",
+        ],
+      },
+    },
+  },
+  {
     slug: "ai-infrastructure-network-intelligence",
     title: "AI Infrastructure & Network Intelligence",
+    lede: "Typed routing, public telemetry tools, and a hosted demo that is not production.",
     eyebrow: "Personal systems project",
     summary:
       "A routed diagnostics lab: classify the request, keep the original query intact, and hand it to a specialist with real probes. A Cloud Run workbench is live in demo mode; public GitHub main is still the earlier graph.",
@@ -292,6 +448,10 @@ export const projects: Project[] = [
     featured: true,
     theme: "teal",
     art: "none",
+    cover: "/work/network-cover.jpg",
+    coverAlt:
+      "Original illustration of a cream field with teal and coral network nodes. Not a production topology diagram or live traffic map.",
+    aspect: "16:9",
     github:
       "https://github.com/SumalyaPatnala/agentic-ai-infrastructure-network-intelligence",
     demo: {
@@ -418,6 +578,7 @@ export const projects: Project[] = [
     slug: "slm-finetuning-evaluation",
     title: "SLM Fine-Tuning & Evaluation",
     eyebrow: "Personal ML project · reported eval artifacts",
+    lede: "LoRA vs base on a structured SDG contract. Held-out N=13 is the honest number.",
     summary:
       "LoRA adaptation of Phi-3 Mini for structured SDG reasoning, scored against a five-section contract. Held-out N=13 is the honest result; the published N=4 CSV overlaps train.",
     problem:
@@ -433,6 +594,10 @@ export const projects: Project[] = [
     featured: true,
     theme: "yellow",
     art: "none",
+    cover: "/work/slm-cover.jpg",
+    coverAlt:
+      "Original illustration of comparison columns on cream paper. Decorative, not a plot of the held-out CSV.",
+    aspect: "3:4",
     github:
       "https://github.com/SumalyaPatnala/sdg-community-assistant/tree/main/03_slm_finetuning_evaluation",
     evidence: [
@@ -544,6 +709,7 @@ export const projects: Project[] = [
     slug: "agentic-soc-platform",
     title: "Agentic SOC Investigation Platform",
     eyebrow: "Personal project · in progress",
+    lede: "Evidence objects before narration. BOTS validation has not been run.",
     summary:
       "The last beat of the story: normalize SIEM exports, preserve provenance, and correlate only literal identifiers—before any model is allowed to narrate.",
     problem:
@@ -566,6 +732,10 @@ export const projects: Project[] = [
     featured: true,
     theme: "coral",
     art: "none",
+    cover: "/work/soc-cover.jpg",
+    coverAlt:
+      "Original illustration of stacked evidence cards and a coral timeline. Not SIEM telemetry or a BOTS screenshot.",
+    aspect: "4:5",
     github: "https://github.com/SumalyaPatnala/agentic-soc-platform",
     evidence: [
       {
@@ -647,6 +817,7 @@ export const projects: Project[] = [
     slug: "multimodal-llm-assistant",
     title: "Smart Multimodal LLM Assistant",
     eyebrow: "Academic research · unpublished",
+    lede: "Papers, captions, and transcripts as evidence. Unpublished research prototype.",
     summary:
       "SFSU research prototype: retrieve from papers and multimodal public content, then answer research questions with a RAG stack rather than a single chat window.",
     problem:
@@ -668,8 +839,12 @@ export const projects: Project[] = [
     status: "academic-research",
     statusLabel: "Academic research prototype · not a verified publication",
     featured: false,
-    theme: "rose",
+    theme: "lavender",
     art: "none",
+    cover: "/work/multimodal-cover.jpg",
+    coverAlt:
+      "Original illustration of papers, a film strip, and a waveform on cream paper. Not a RAG screenshot or retrieval score.",
+    aspect: "3:4",
     github: "https://github.com/SumalyaPatnala/Social_Innovation_Research_With_LLMS",
     evidence: [
       {
@@ -746,6 +921,7 @@ export const projects: Project[] = [
     slug: "document-retrieval-engineering",
     title: "Document Retrieval Engineering",
     eyebrow: "Professional work · generalized",
+    lede: "Production-style document Q&A architecture, generalized. No client corpus.",
     summary:
       "Production retrieval for document Q&A: chunking, hybrid search, serving, evaluation, and guardrails—described as architecture, not as an employer case file.",
     problem:
@@ -770,6 +946,10 @@ export const projects: Project[] = [
     featured: false,
     theme: "lavender",
     art: "none",
+    cover: "/work/retrieval-cover.jpg",
+    coverAlt:
+      "Original illustration of stacked documents and coral search beams. Architecture mood, not an employer console.",
+    aspect: "4:5",
     evidence: [
       {
         kind: "resume",
@@ -838,6 +1018,7 @@ export const projects: Project[] = [
     slug: "llmops-hybrid-inference",
     title: "LLMOps for Local and Hybrid Inference",
     eyebrow: "Personal platform project",
+    lede: "Pin the runtime that actually ran. Local first, remote fallback, JSONL logs.",
     summary:
       "The serving beat: a FastAPI router that pins summarization, extraction, and classification to an adapter, local Ollama, or a remote Hugging Face fallback, and logs which runtime actually ran.",
     problem:
@@ -851,8 +1032,12 @@ export const projects: Project[] = [
     status: "personal-complete-artifacts",
     statusLabel: "Personal project · serving code in the SDG repo",
     featured: true,
-    theme: "lavender",
+    theme: "yellow",
     art: "none",
+    cover: "/work/llmops-cover.jpg",
+    coverAlt:
+      "Original illustration of a branching serving path across three stations. Not a live metrics dashboard.",
+    aspect: "16:9",
     github:
       "https://github.com/SumalyaPatnala/sdg-community-assistant/tree/main/02_llmops_local_hybrid_inference",
     evidence: [
@@ -927,11 +1112,11 @@ export function getProject(slug: string) {
 }
 
 export function caseStudyOrder() {
-  const vision = visionProjects();
+  const spotlight = spotlightProjects();
   const featured = featuredProjects();
-  const used = new Set([...vision, ...featured].map((project) => project.slug));
+  const used = new Set([...spotlight, ...featured].map((project) => project.slug));
   const rest = projects.filter((project) => !used.has(project.slug));
-  return [...vision, ...featured, ...rest];
+  return [...spotlight, ...featured, ...rest];
 }
 
 export function neighboringProjects(slug: string) {
@@ -965,11 +1150,24 @@ export function visionProjects() {
     .filter((project): project is Project => Boolean(project?.vision));
 }
 
+export const spotlightOrder = [
+  "styleweave-vlm-lab",
+  "worldsense-ai",
+  "movie-discovery-recommendation",
+] as const;
+
+export function spotlightProjects() {
+  return spotlightOrder
+    .map((slug) => projects.find((project) => project.slug === slug))
+    .filter((project): project is Project => Boolean(project?.spotlight));
+}
+
 export type ProjectReadiness =
   | "hosted-demo"
   | "local-prototype"
   | "research"
   | "planned"
+  | "phase-0"
   | "public-artifacts"
   | "professional";
 
@@ -978,12 +1176,13 @@ export const readinessLabels: Record<ProjectReadiness, string> = {
   "local-prototype": "Local prototype",
   "research": "Research prototype",
   "planned": "Planned",
+  "phase-0": "Phase 0 research",
   "public-artifacts": "Public artifacts",
   "professional": "Professional · generalized",
 };
 
 export function projectReadiness(project: Project): ProjectReadiness {
-  if (project.slug === "styleweave-vlm-lab") return "planned";
+  if (project.slug === "styleweave-vlm-lab") return "phase-0";
   if (project.slug === "worldsense-ai") return "local-prototype";
   if (project.slug === "agentic-soc-platform") return "local-prototype";
   if (project.status === "academic-research") return "research";

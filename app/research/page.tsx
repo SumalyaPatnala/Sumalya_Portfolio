@@ -25,13 +25,13 @@ export default function ResearchPage() {
       <PageHeader
         kicker="Research"
         title="Questions first. Results only when an artifact exists."
-        lede="Computer vision, open VLMs, model evaluation, and reliable reasoning are the current threads. Academic prototype work stays labeled unpublished. A newer infrastructure question is labeled in development. Neither is a paper."
+        lede="Computer vision, open VLMs, recommendation, model evaluation, and reliable reasoning are the current threads. Academic prototype work stays labeled unpublished. StyleWeave is Phase 0 documentation. Neither unpublished research nor Planned recommenders are papers."
       />
       <Container className="space-y-16 pb-24">
         <section>
           <p className="kicker">Index</p>
           <h2 className="display mt-2 max-w-3xl text-3xl sm:text-4xl">
-            Six threads, with status attached.
+            Threads, with status attached.
           </h2>
           <div className="mt-8 grid gap-5 lg:grid-cols-2">
             {researchThreads.map((thread, index) => (

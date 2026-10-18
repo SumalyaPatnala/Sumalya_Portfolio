@@ -27,5 +27,5 @@ test("evaluation workbench uses the synthetic banner and can open a case", async
 
 test("research page does not claim publication", async ({ page }) => {
   await page.goto("/research");
-  await expect(page.getByText(/not verified as published/i)).toBeVisible();
+  await expect(page.getByText(/not verified as published/i).first()).toBeVisible();
 });

@@ -9,7 +9,7 @@ import { CodeSnippet } from "@/components/CodeSnippet";
 import { Container } from "@/components/Container";
 import { CopyLinkButton } from "@/components/CopyLinkButton";
 import { MeasuredVisuals } from "@/components/MeasuredVisuals";
-import { ProjectArt, artKindFor } from "@/components/ProjectArt";
+import { ProjectCover } from "@/components/ProjectCover";
 import { RoutingEvalTable } from "@/components/RoutingEvalTable";
 import { SlmEvalTable } from "@/components/SlmEvalTable";
 import { EvidenceBadge, StatusBadge } from "@/components/StatusBadge";
@@ -21,17 +21,8 @@ import {
   projects,
   readinessLabels,
   type Project,
-  type ProjectTheme,
 } from "@/content/projects";
 import { cn } from "@/lib/cn";
-
-const themeField: Record<ProjectTheme, string> = {
-  rose: "bg-rose",
-  coral: "bg-coral",
-  lavender: "bg-lavender",
-  teal: "bg-teal",
-  yellow: "bg-yellow",
-};
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -78,13 +69,19 @@ export default async function CaseStudyPage({
           <span className="text-fg">{project.title}</span>
         </p>
 
-        {vision ? (
-          <VisionHero project={project} readiness={readinessLabels[readiness]} />
-        ) : (
-          <StandardHero project={project} readiness={readinessLabels[readiness]} />
-        )}
+        <CinematicHero
+          project={project}
+          readiness={readinessLabels[readiness]}
+          featuredFrame={vision || Boolean(project.spotlight)}
+        />
 
-        <CaseStudyToc />
+        <CaseStudyToc
+          extra={
+            study.plannedRoadmap
+              ? [{ href: "#planned", label: "Planned" }]
+              : []
+          }
+        />
       </Container>
 
       <Container className="grid gap-10 pb-24 lg:grid-cols-[minmax(0,1fr)_14rem] lg:items-start">
@@ -237,6 +234,21 @@ export default async function CaseStudyPage({
             </ul>
           </StudySection>
 
+          {study.plannedRoadmap ? (
+            <StudySection id="planned" title={study.plannedRoadmap.title}>
+              <p>
+                These capabilities are labeled Planned. They are not implemented
+                in the public RecommendationSystem repository and must wait until
+                StyleWeave has completed its measured Phase 1 work.
+              </p>
+              <ul className="mt-4 list-disc space-y-2 pl-5">
+                {study.plannedRoadmap.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </StudySection>
+          ) : null}
+
           <StudySection id="reproduce" title="Reproducibility">
             <ol className="list-decimal space-y-2 pl-5">
               {study.reproduce.map((item) => (
@@ -280,88 +292,52 @@ function StudySection({
   );
 }
 
-function StandardHero({
+function CinematicHero({
   project,
   readiness,
+  featuredFrame,
 }: {
   project: Project;
   readiness: string;
+  featuredFrame: boolean;
 }) {
   return (
     <header className="mt-6">
-      <p className="kicker">{project.eyebrow}</p>
+      <figure className="group relative overflow-hidden rounded-[1.8rem] shadow-[var(--shadow)]">
+        <ProjectCover
+          project={project}
+          ratio="cinematic"
+          priority
+          sizes="(max-width: 1100px) 100vw, 72rem"
+        />
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/25 to-transparent"
+          aria-hidden="true"
+        />
+        <figcaption className="absolute bottom-3 left-4 right-4 text-xs text-cream/80">
+          Original illustration — not a product screenshot or experimental result.
+        </figcaption>
+      </figure>
+      <p className="kicker mt-6">{project.eyebrow}</p>
       <div className="mt-3 flex flex-wrap items-center gap-3">
-        <StatusBadge label={project.statusLabel} status={project.status} />
         <span className="rounded-full border border-line px-2.5 py-1 text-xs text-fg-muted">
           {readiness}
         </span>
+        <StatusBadge label={project.statusLabel} status={project.status} />
         <CopyLinkButton />
       </div>
       <h1 className="display mt-4 max-w-4xl text-balance text-3xl sm:text-5xl">
         {project.title}
       </h1>
-      <div className="mt-6 max-w-4xl overflow-hidden rounded-[1.4rem]">
-        <ProjectArt
-          kind={artKindFor(project)}
-          theme={project.theme}
-          className="aspect-[16/7]"
-        />
-        <p className="mt-2 text-xs text-fg-faint">
-          Original placeholder illustration — not a product screenshot.
-        </p>
-      </div>
       <p className="mt-5 max-w-2xl text-lg text-fg-muted">{project.summary}</p>
+      {featuredFrame && project.inProgress ? (
+        <ul className="mt-5 grid gap-2 text-sm text-fg-muted sm:grid-cols-2">
+          {project.inProgress.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      ) : null}
       <HeroLinks project={project} />
-    </header>
-  );
-}
-
-function VisionHero({
-  project,
-  readiness,
-}: {
-  project: Project;
-  readiness: string;
-}) {
-  return (
-    <header
-      className={cn(
-        "mt-6 overflow-hidden rounded-[1.8rem] text-ink shadow-[var(--shadow)]",
-        themeField[project.theme],
-      )}
-    >
-      <ProjectArt
-        kind={artKindFor(project)}
-        theme={project.theme}
-        className="aspect-[16/8] sm:aspect-[16/6]"
-      />
-      <div className="p-5 sm:p-8">
-        <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-ink/70">
-          {project.eyebrow}
-        </p>
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <span className="rounded-full border border-ink/20 bg-cream/70 px-2.5 py-1 text-xs text-ink">
-            {readiness}
-          </span>
-          <StatusBadge label={project.statusLabel} status={project.status} />
-          <CopyLinkButton className="border-ink/25 text-ink hover:text-ink" />
-        </div>
-        <h1 className="display mt-4 max-w-4xl text-balance text-3xl text-ink sm:text-5xl">
-          {project.title}
-        </h1>
-        <p className="mt-4 max-w-2xl text-lg text-ink/85">{project.summary}</p>
-        {project.inProgress ? (
-          <ul className="mt-5 grid gap-2 text-sm text-ink/85 sm:grid-cols-2">
-            {project.inProgress.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        ) : null}
-        <p className="mt-4 text-xs text-ink/60">
-          Original placeholder illustration — not a product screenshot.
-        </p>
-        <HeroLinks project={project} ink />
-      </div>
     </header>
   );
 }

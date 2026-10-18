@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
+import { ProjectCover } from "@/components/ProjectCover";
 import { EvidenceBadge, StatusBadge } from "@/components/StatusBadge";
 import type { Project } from "@/content/projects";
 import { areaLabels } from "@/content/projects";
@@ -21,8 +22,13 @@ export function ProjectCard({
   };
 
   return (
-    <article className="panel flex h-full flex-col overflow-hidden p-0">
+    <article className="group panel flex h-full flex-col overflow-hidden p-0">
       <div className={`h-2 ${ribbon[project.theme]}`} aria-hidden="true" />
+      <ProjectCover
+        project={project}
+        ratio="16:9"
+        sizes="(max-width: 768px) 100vw, 50vw"
+      />
       <div className="flex flex-1 flex-col p-5">
       <div className="flex flex-wrap items-center gap-2">
         <StatusBadge label={project.statusLabel} status={project.status} />

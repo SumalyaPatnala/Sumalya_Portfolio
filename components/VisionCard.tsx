@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ProjectArt } from "@/components/ProjectArt";
+import { ProjectCover } from "@/components/ProjectCover";
 import { StatusBadge } from "@/components/StatusBadge";
 import type { Project } from "@/content/projects";
 import { cn } from "@/lib/cn";
@@ -22,18 +22,23 @@ export function VisionCard({
   return (
     <article
       className={cn(
-        "flex h-full flex-col overflow-hidden rounded-[1.6rem] border border-line text-ink shadow-[var(--shadow)]",
+        "group flex h-full flex-col overflow-hidden rounded-[1.6rem] border border-line text-ink shadow-[var(--shadow)]",
         field[project.theme],
         offset && "lg:mt-12",
       )}
     >
-      <ProjectArt kind={project.art} className="aspect-[16/9] sm:aspect-[5/3]" />
+      <ProjectCover
+        project={project}
+        ratio={project.aspect === "16:9" ? "cinematic" : "4:5"}
+        priority
+        sizes="(max-width: 1024px) 100vw, 50vw"
+      />
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <div className="flex flex-wrap items-center gap-2">
           <StatusBadge label={project.statusLabel} status={project.status} />
         </div>
         <h3 className="display mt-3 text-3xl leading-tight text-ink">{project.title}</h3>
-        <p className="mt-3 text-sm text-ink/80">{project.summary}</p>
+        <p className="mt-3 text-sm text-ink/80">{project.lede}</p>
         {project.inProgress?.length ? (
           <ul className="mt-4 space-y-1.5 text-sm text-ink/80">
             {project.inProgress.map((item) => (

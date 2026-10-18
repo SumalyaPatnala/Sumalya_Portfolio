@@ -10,14 +10,18 @@ const sections = [
   { href: "#next", label: "Next steps" },
 ] as const;
 
-export function CaseStudyToc() {
+export function CaseStudyToc({
+  extra = [],
+}: {
+  extra?: { href: string; label: string }[];
+}) {
   return (
     <nav
       aria-label="On this page"
       className="no-print mt-8 -mx-5 overflow-x-auto px-5 sm:mx-0 sm:px-0"
     >
       <ol className="flex min-w-max gap-2 sm:min-w-0 sm:flex-wrap">
-        {sections.map((item, index) => (
+        {[...sections, ...extra].map((item, index) => (
           <li key={item.href}>
             <a
               href={item.href}

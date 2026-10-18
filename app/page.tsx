@@ -3,13 +3,13 @@ import { Container } from "@/components/Container";
 import { ContourMark } from "@/components/ContourMark";
 import { ProjectCard } from "@/components/ProjectCard";
 import { VisionCard } from "@/components/VisionCard";
-import { featuredProjects, visionProjects } from "@/content/projects";
+import { featuredProjects, spotlightProjects } from "@/content/projects";
 import { site, storyBeats } from "@/content/site";
 import { getNotes } from "@/lib/notes";
 
 export default function HomePage() {
   const featured = featuredProjects();
-  const vision = visionProjects();
+  const spotlight = spotlightProjects();
   const notes = getNotes()
     .filter((note) => note.status === "published")
     .slice(0, 3);
@@ -104,18 +104,20 @@ export default function HomePage() {
       <Container as="section" className="py-6">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2 className="kicker">Computer vision</h2>
+            <h2 className="kicker">See, track, and recommend</h2>
             <p className="display mt-2 max-w-3xl text-3xl sm:text-4xl">
-              Two labs for seeing: fashion language, and video events.
+              Fashion language, video evidence, and movie neighbors.
             </p>
           </div>
         </div>
         <p className="mt-3 max-w-2xl text-sm text-fg-muted">
-          Planned work is labeled. WorldSense Phase 1 is local source, not a
-          hosted demo. StyleWeave has no repository yet.
+          StyleWeave is Phase 0 research with a public repository and no
+          metrics. WorldSense Phase 1 is local source, not a hosted demo. The
+          movie recommender is a content-based Flask baseline, not a live
+          streaming product.
         </p>
-        <div className="mt-8 grid items-start gap-5 lg:grid-cols-[1.15fr_0.85fr]">
-          {vision.map((project, index) => (
+        <div className="mt-8 grid items-start gap-5 lg:grid-cols-3">
+          {spotlight.map((project, index) => (
             <VisionCard
               key={project.slug}
               project={project}

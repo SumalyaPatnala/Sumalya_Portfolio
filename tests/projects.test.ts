@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   caseStudyOrder,
@@ -7,6 +9,7 @@ import {
   neighboringProjects,
   projectReadiness,
   projects,
+  spotlightProjects,
   visionProjects,
 } from "@/content/projects";
 
@@ -110,16 +113,53 @@ describe("project catalog", () => {
     expect(project?.title).not.toMatch(/production/i);
   });
 
-  it("labels StyleWeave as unimplemented with no metrics", () => {
+  it("labels StyleWeave as Phase 0 research with a public repo and no metrics", () => {
     const project = getProject("styleweave-vlm-lab");
     expect(project?.status).toBe("personal-in-progress");
-    expect(project?.github).toBeUndefined();
+    expect(project?.github).toBe(
+      "https://github.com/SumalyaPatnala/styleweave-vlm-lab",
+    );
+    expect(project?.statusLabel).toMatch(/Phase 0/i);
     expect(project?.caseStudy.results.join(" ")).toMatch(/No benchmark results/i);
-    expect(project?.inProgress?.join(" ")).toMatch(/not implemented/i);
+    expect(project?.caseStudy.evaluation).toMatch(/No evaluation methodology has been run/i);
+    expect(project?.inProgress?.join(" ")).toMatch(/not evaluated/i);
+    expect(projectReadiness(project!)).toBe("phase-0");
+  });
+
+  it("registers the movie discovery project from RecommendationSystem", () => {
+    const project = getProject("movie-discovery-recommendation");
+    expect(project?.github).toBe(
+      "https://github.com/SumalyaPatnala/RecommendationSystem",
+    );
+    expect(project?.title).toBe("Movie Discovery & Recommendation System");
+    expect(project?.tech.join(" ")).toMatch(/CountVectorizer/i);
+    expect(project?.caseStudy.architecture.join(" ")).toMatch(/CountVectorizer/i);
+    expect(project?.caseStudy.architecture.join(" ")).toMatch(/cosine/i);
+    expect(project?.caseStudy.limitations.join(" ")).toMatch(/TMDB/i);
+    expect(project?.demo).toBeUndefined();
+    expect(project?.caseStudy.plannedRoadmap?.items.every((item) => item.startsWith("Planned:"))).toBe(
+      true,
+    );
+    expect(project?.caseStudy.plannedRoadmap?.items.join(" ")).toMatch(
+      /not Netflix viewing data/i,
+    );
+  });
+
+  it("attaches unique original covers to every project", () => {
+    const covers = projects.map((project) => project.cover);
+    expect(new Set(covers).size).toBe(covers.length);
+    for (const project of projects) {
+      expect(project.cover).toMatch(/^\/work\/.+\.jpg$/);
+      expect(project.coverAlt.length).toBeGreaterThan(24);
+      expect(["4:5", "3:4", "16:9"]).toContain(project.aspect);
+      expect(
+        existsSync(join(process.cwd(), "public", project.cover.replace(/^\//, ""))),
+      ).toBe(true);
+    }
   });
 
   it("distinguishes hosted demo, local prototype, and planned work", () => {
-    expect(projectReadiness(getProject("styleweave-vlm-lab")!)).toBe("planned");
+    expect(projectReadiness(getProject("styleweave-vlm-lab")!)).toBe("phase-0");
     expect(projectReadiness(getProject("worldsense-ai")!)).toBe("local-prototype");
     expect(projectReadiness(getProject("ai-infrastructure-network-intelligence")!)).toBe(
       "hosted-demo",
@@ -144,6 +184,11 @@ describe("project catalog", () => {
       "styleweave-vlm-lab",
       "worldsense-ai",
     ]);
+    expect(spotlightProjects().map((item) => item.slug)).toEqual([
+      "styleweave-vlm-lab",
+      "worldsense-ai",
+      "movie-discovery-recommendation",
+    ]);
   });
 
   it("gives every case study a research question without inventing results", () => {
@@ -156,10 +201,11 @@ describe("project catalog", () => {
     expect(getProject("worldsense-ai")?.caseStudy.question).toMatch(/replayed/i);
   });
 
-  it("orders case-study navigation vision-first, then the four public systems", () => {
+  it("orders case-study navigation spotlight-first, then the four public systems", () => {
     expect(caseStudyOrder().map((project) => project.slug)).toEqual([
       "styleweave-vlm-lab",
       "worldsense-ai",
+      "movie-discovery-recommendation",
       "ai-infrastructure-network-intelligence",
       "slm-finetuning-evaluation",
       "llmops-hybrid-inference",
@@ -168,8 +214,11 @@ describe("project catalog", () => {
       "document-retrieval-engineering",
     ]);
     expect(neighboringProjects("styleweave-vlm-lab").next?.slug).toBe("worldsense-ai");
-    expect(neighboringProjects("worldsense-ai").previous?.slug).toBe(
-      "styleweave-vlm-lab",
+    expect(neighboringProjects("worldsense-ai").next?.slug).toBe(
+      "movie-discovery-recommendation",
+    );
+    expect(neighboringProjects("movie-discovery-recommendation").previous?.slug).toBe(
+      "worldsense-ai",
     );
   });
 

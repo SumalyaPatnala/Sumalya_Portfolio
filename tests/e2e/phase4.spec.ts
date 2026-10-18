@@ -83,7 +83,9 @@ test("draft notes are labeled and unpublished on the homepage", async ({
   page,
 }) => {
   await page.goto("/");
-  await expect(page.getByText("Evaluation before orchestration")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Evaluation before orchestration" }).first(),
+  ).toBeVisible();
   await expect(
     page.getByText("Design principles for researcher-facing tools"),
   ).toHaveCount(0);

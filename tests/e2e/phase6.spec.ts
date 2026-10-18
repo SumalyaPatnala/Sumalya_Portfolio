@@ -40,7 +40,7 @@ test("how I build links to measured work", async ({ page }) => {
 
 test("research hub still marks the SFSU prototype unpublished", async ({ page }) => {
   await page.goto("/research");
-  await expect(page.getByText(/not verified as published/i)).toBeVisible();
+  await expect(page.getByText(/not verified as published/i).first()).toBeVisible();
   await expect(page.getByRole("link", { name: "Open the research brief" })).toBeVisible();
 });
 

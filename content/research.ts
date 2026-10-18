@@ -41,6 +41,7 @@ export const research = {
   interests: [
     "Computer vision and temporal events",
     "Open vision-language models",
+    "Content-based recommendation and retrieval",
     "Evaluation methodology for retrieval and agents",
     "Deterministic evidence objects in front of language models",
     "Researcher-facing tooling: traces, comparisons, failure taxonomies",
@@ -51,6 +52,27 @@ export const research = {
 };
 
 export const researchThreads = [
+  {
+    id: "vlm-fashion",
+    theme: "rose" as const,
+    kicker: "Vision-language models",
+    title: "Open VLM fashion search",
+    question:
+      "Can explicit visual attribute constraints and a small fusion module improve FashionIQ composed retrieval while keeping explanations visually grounded?",
+    method:
+      "Phase 0 documentation packet: hardware, literature, hypotheses, FashionIQ audit, model selection, experiment plan. Frozen CLIP baseline is not evaluated.",
+    status: "Phase 0 research complete. No training, metrics, or deployed interface.",
+    evidence:
+      "Public GitHub styleweave-vlm-lab. No Recall@K or nDCG. Fashion imagery on this site is original illustration, not FashionIQ samples.",
+    links: [
+      { href: "/work/styleweave-vlm-lab", label: "StyleWeave case study" },
+      {
+        href: "https://github.com/SumalyaPatnala/styleweave-vlm-lab",
+        label: "StyleWeave repository",
+        external: true,
+      },
+    ],
+  },
   {
     id: "vision-events",
     theme: "teal" as const,
@@ -66,17 +88,26 @@ export const researchThreads = [
     links: [{ href: "/work/worldsense-ai", label: "WorldSense case study" }],
   },
   {
-    id: "vlm-fashion",
-    theme: "rose" as const,
-    kicker: "Vision-language models",
-    title: "Open VLM fashion search",
+    id: "recommendation",
+    theme: "coral" as const,
+    kicker: "Recommendation systems",
+    title: "Content-based movie discovery",
     question:
-      "Can an open vision-language lab make fashion retrieval, attributes, and tool use evaluable instead of closed-catalog magic?",
+      "If the only user action is picking a title, can bag-of-words cosine neighbors on cast, director, and genre produce a usable discovery list without a personalization graph?",
     method:
-      "Intended loop only: image/text query → open VLM adapter → multimodal retrieval → tools → scored answers.",
-    status: "Not implemented. No repository, demo, or benchmark.",
-    evidence: "No local or GitHub repository named StyleWeave was found. No metrics.",
-    links: [{ href: "/work/styleweave-vlm-lab", label: "StyleWeave case study" }],
+      "Flask app over a frozen CSV: CountVectorizer + cosine similarity, TMDB for display metadata, IMDb review scrape with a pickled polarity model.",
+    status:
+      "Public source. Content-based baseline only. No live production URL claimed. Collaborative filtering, embeddings, and ranking metrics are Planned.",
+    evidence:
+      "https://github.com/SumalyaPatnala/RecommendationSystem. No MAP/nDCG in the repo. Not Netflix viewing data.",
+    links: [
+      { href: "/work/movie-discovery-recommendation", label: "Movie discovery case study" },
+      {
+        href: "https://github.com/SumalyaPatnala/RecommendationSystem",
+        label: "RecommendationSystem repository",
+        external: true,
+      },
+    ],
   },
   {
     id: "model-eval",

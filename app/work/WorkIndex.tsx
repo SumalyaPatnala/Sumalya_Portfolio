@@ -9,7 +9,7 @@ import {
   featuredProjects,
   filterProjects,
   projectAreas,
-  visionProjects,
+  spotlightProjects,
   type ProjectArea,
 } from "@/content/projects";
 import { cn } from "@/lib/cn";
@@ -23,70 +23,72 @@ export function WorkIndex() {
 
   const grouped = useMemo(() => {
     if (area !== "all") return null;
-    const vision = visionProjects();
+    const spotlight = spotlightProjects();
     const featured = featuredProjects();
-    const used = new Set([...vision, ...featured].map((project) => project.slug));
+    const used = new Set([...spotlight, ...featured].map((project) => project.slug));
     const rest = visible.filter((project) => !used.has(project.slug));
-    return { vision, featured, rest };
+    return { spotlight, featured, rest };
   }, [area, visible]);
 
   return (
     <Container className="pb-24">
       <div className="sticky top-[3.35rem] z-30 -mx-5 border-b border-line bg-[color:color-mix(in_srgb,var(--bg)_88%,transparent)] px-5 py-2.5 backdrop-blur-md sm:-mx-8 sm:px-8">
-      <div
-        className="flex flex-wrap gap-2"
-        role="group"
-        aria-label="Filter by area"
-      >
-        <FilterChip active={area === "all"} onClick={() => setArea("all")}>
-          All
-        </FilterChip>
-        {projectAreas.map((item) => (
-          <FilterChip
-            key={item}
-            active={area === item}
-            onClick={() => setArea(item)}
-          >
-            {areaLabels[item]}
+        <div
+          className="flex flex-wrap gap-2"
+          role="group"
+          aria-label="Filter by area"
+        >
+          <FilterChip active={area === "all"} onClick={() => setArea("all")}>
+            All
           </FilterChip>
-        ))}
-      </div>
+          {projectAreas.map((item) => (
+            <FilterChip
+              key={item}
+              active={area === item}
+              onClick={() => setArea(item)}
+            >
+              {areaLabels[item]}
+            </FilterChip>
+          ))}
+        </div>
       </div>
       <ul
         className="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-fg-muted"
         aria-label="Readiness key"
       >
-        <li>Hosted demo</li>
+        <li>Phase 0 research</li>
         <li>Local prototype</li>
+        <li>Hosted demo</li>
         <li>Public artifacts</li>
         <li>Research prototype</li>
-        <li>Planned</li>
         <li>Professional · generalized</li>
       </ul>
 
       {visible.length === 0 ? (
         <p className="mt-10 text-fg-muted">No projects in this filter.</p>
       ) : grouped ? (
-        <div className="mt-10 space-y-14">
+        <div className="mt-10 space-y-16">
           <GallerySection
-            kicker="Computer vision"
-            title="See, track, and say what is not built yet."
+            kicker="Discovery"
+            title="Fashion language, video evidence, and movie neighbors."
           >
-            <div className="grid items-start gap-5 lg:grid-cols-[1.12fr_0.88fr]">
-              {grouped.vision.map((project, index) => (
-                <GalleryCard
-                  key={project.slug}
-                  project={project}
-                  featured={index === 0}
-                />
-              ))}
+            {grouped.spotlight[0] && grouped.spotlight[1] && grouped.spotlight[2] ? (
+            <div className="grid items-start gap-5 lg:grid-cols-12">
+              <div className="lg:col-span-5">
+                <GalleryCard project={grouped.spotlight[0]} featured />
+              </div>
+              <div className="grid gap-5 lg:col-span-7">
+                <GalleryCard project={grouped.spotlight[1]} cinematic />
+                <GalleryCard project={grouped.spotlight[2]} cinematic />
+              </div>
             </div>
+            ) : null}
           </GallerySection>
           <GallerySection
             kicker="Four systems"
             title="Adapt, serve, dispatch, then ground."
           >
-            <div className="grid gap-5 md:grid-cols-2">
+            <div className="columns-1 gap-5 sm:columns-2 xl:columns-3">
               {grouped.featured.map((project) => (
                 <GalleryCard key={project.slug} project={project} />
               ))}
@@ -97,7 +99,7 @@ export function WorkIndex() {
               kicker="Also in the catalog"
               title="Academic and professional work, labeled as such."
             >
-              <div className="grid gap-5 md:grid-cols-2">
+              <div className="columns-1 gap-5 sm:columns-2 xl:columns-3">
                 {grouped.rest.map((project) => (
                   <GalleryCard key={project.slug} project={project} />
                 ))}
@@ -106,7 +108,7 @@ export function WorkIndex() {
           ) : null}
         </div>
       ) : (
-        <div className="mt-10 grid gap-5 md:grid-cols-2">
+        <div className="mt-10 columns-1 gap-5 sm:columns-2 xl:columns-3">
           {visible.map((project) => (
             <GalleryCard key={project.slug} project={project} />
           ))}
@@ -118,9 +120,10 @@ export function WorkIndex() {
         <Link href="/work/ai-infrastructure-network-intelligence" className="text-fg-muted">
           the flagship infrastructure study
         </Link>
-        . A live URL is a hosted demo, not production. StyleWeave is planned.
-        WorldSense is a local Phase 1 lab. Links appear only when a real
-        destination exists.
+        . Cover images are original illustrations, not experimental evidence.
+        StyleWeave is Phase 0 research. WorldSense is a local Phase 1 lab. The
+        movie recommender is a content-based Flask baseline, not a live Netflix
+        clone. Links appear only when a real destination exists.
       </p>
     </Container>
   );

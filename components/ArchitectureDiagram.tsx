@@ -18,9 +18,11 @@ const captions: Record<Variant, string> = {
   llmops:
     "POST /infer → ModelRouter (adapter, Ollama, remote) with the model that actually ran written to JSONL.",
   weave:
-    "Intended StyleWeave loop only: image/text query → open VLM adapter → retrieval → tools → eval. Not implemented.",
+    "StyleWeave Phase 0 documented loop: query + attributes → frozen CLIP baseline → optional fusion → explanations. No metrics yet.",
   worldsense:
     "MP4 → sampled frames → Faster R-CNN → BYTE-style IDs → polygon ROI events → SQLite evidence. Local Phase 1.",
+  movies:
+    "Frozen CSV → CountVectorizer + cosine similarity → ten neighbors; TMDB for display metadata. Not collaborative filtering.",
 };
 
 function Box({
@@ -300,17 +302,17 @@ function WeaveDiagram() {
         fontSize="12"
         fontFamily="ui-monospace, monospace"
       >
-        INTENDED · NOT IMPLEMENTED
+        PHASE 0 DOCS · NO METRICS
       </text>
-      <Box x={12} y={84} w={100} h={40} label="Query" />
+      <Box x={12} y={84} w={100} h={40} label="Hardware" />
       <Arrow x1={112} y1={104} x2={140} y2={104} />
-      <Box x={140} y={84} w={110} h={40} label="Open VLM" />
+      <Box x={140} y={84} w={110} h={40} label="Literature" />
       <Arrow x1={250} y1={104} x2={278} y2={104} />
-      <Box x={278} y={76} w={120} h={56} label="Retrieval" accent />
+      <Box x={278} y={76} w={120} h={56} label="Hypotheses" accent />
       <Arrow x1={398} y1={104} x2={426} y2={104} />
-      <Box x={426} y={84} w={80} h={40} label="Tools" />
-      <Arrow x1={506} y1={104} x2={534} y2={104} />
-      <Box x={534} y={84} w={94} h={40} label="Eval" />
+      <Box x={426} y={84} w={96} h={40} label="FashionIQ" />
+      <Arrow x1={522} y1={104} x2={540} y2={104} />
+      <Box x={540} y={84} w={88} h={40} label="CLIP plan" />
     </SvgFrame>
   );
 }
@@ -339,6 +341,32 @@ function WorldSenseDiagram() {
       <Box x={484} y={84} w={64} h={40} label="ROI" />
       <Arrow x1={548} y1={104} x2={568} y2={104} />
       <Box x={568} y={84} w={64} h={40} label="Store" />
+    </SvgFrame>
+  );
+}
+
+function MoviesDiagram() {
+  return (
+    <SvgFrame variant="movies" width={640} height={200}>
+      <text
+        x={320}
+        y={22}
+        textAnchor="middle"
+        fill="var(--diagram-muted)"
+        fontSize="12"
+        fontFamily="ui-monospace, monospace"
+      >
+        CONTENT-BASED · FROZEN CSV
+      </text>
+      <Box x={12} y={84} w={88} h={40} label="Title" />
+      <Arrow x1={100} y1={104} x2={124} y2={104} />
+      <Box x={124} y={76} w={120} h={56} label="CountVectorizer" accent />
+      <Arrow x1={244} y1={104} x2={268} y2={104} />
+      <Box x={268} y={84} w={88} h={40} label="Cosine" />
+      <Arrow x1={356} y1={104} x2={380} y2={104} />
+      <Box x={380} y={84} w={88} h={40} label="Top-10" />
+      <Arrow x1={468} y1={104} x2={492} y2={104} />
+      <Box x={492} y={84} w={132} h={40} label="TMDB display" />
     </SvgFrame>
   );
 }
@@ -372,6 +400,7 @@ const diagrams: Record<Variant, () => ReactNode> = {
   llmops: LlmopsDiagram,
   weave: WeaveDiagram,
   worldsense: WorldSenseDiagram,
+  movies: MoviesDiagram,
 };
 
 export function ArchitectureDiagram({

@@ -14,7 +14,7 @@ export default function WorkPage() {
       <PageHeader
         kicker="Selected work"
         title="Labs you can inspect, and work that is still a direction."
-        lede="Four public systems still tell one argument: adapt, serve, dispatch, then ground. Computer vision sits beside them, labeled as a local prototype or as planned. Filters change the index, not the facts. Metrics appear only when an artifact exists."
+        lede="A visual catalog of computer vision, VLMs, recommendation, agentic systems, evaluation, and production ML. StyleWeave, WorldSense, and movie discovery lead. Cover images are original illustrations, not experimental evidence. Metrics appear only when an artifact exists."
       />
       <WorkIndex />
     </main>

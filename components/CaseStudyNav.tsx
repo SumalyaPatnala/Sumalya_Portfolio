@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ProjectCover } from "@/components/ProjectCover";
 import type { Project } from "@/content/projects";
 
 export function CaseStudyNav({
@@ -16,14 +17,21 @@ export function CaseStudyNav({
       {previous ? (
         <Link
           href={`/work/${previous.slug}`}
-          className="panel group p-5 no-underline transition-colors hover:border-[color:color-mix(in_srgb,var(--coral)_45%,var(--line))]"
+          className="panel group overflow-hidden p-0 no-underline transition-colors hover:border-[color:color-mix(in_srgb,var(--coral)_45%,var(--line))]"
         >
-          <p className="font-mono text-[0.68rem] uppercase tracking-[0.14em] text-fg-faint">
-            Previous
-          </p>
-          <p className="display mt-2 text-xl text-fg group-hover:underline">
-            {previous.title}
-          </p>
+          <ProjectCover
+            project={previous}
+            ratio="16:9"
+            sizes="(max-width: 640px) 100vw, 50vw"
+          />
+          <div className="p-5">
+            <p className="font-mono text-[0.68rem] uppercase tracking-[0.14em] text-fg-faint">
+              Previous
+            </p>
+            <p className="display mt-2 text-xl text-fg group-hover:underline">
+              {previous.title}
+            </p>
+          </div>
         </Link>
       ) : (
         <Link
@@ -39,14 +47,21 @@ export function CaseStudyNav({
       {next ? (
         <Link
           href={`/work/${next.slug}`}
-          className="panel group p-5 no-underline transition-colors hover:border-[color:color-mix(in_srgb,var(--coral)_45%,var(--line))] sm:text-right"
+          className="panel group overflow-hidden p-0 no-underline transition-colors hover:border-[color:color-mix(in_srgb,var(--coral)_45%,var(--line))] sm:text-right"
         >
-          <p className="font-mono text-[0.68rem] uppercase tracking-[0.14em] text-fg-faint">
-            Next
-          </p>
-          <p className="display mt-2 text-xl text-fg group-hover:underline">
-            {next.title}
-          </p>
+          <ProjectCover
+            project={next}
+            ratio="16:9"
+            sizes="(max-width: 640px) 100vw, 50vw"
+          />
+          <div className="p-5">
+            <p className="font-mono text-[0.68rem] uppercase tracking-[0.14em] text-fg-faint">
+              Next
+            </p>
+            <p className="display mt-2 text-xl text-fg group-hover:underline">
+              {next.title}
+            </p>
+          </div>
         </Link>
       ) : (
         <Link

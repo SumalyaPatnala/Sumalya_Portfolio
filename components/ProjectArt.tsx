@@ -13,6 +13,7 @@ const diagramArt: Record<Project["diagram"], ProjectArtKind> = {
   multimodal: "papers",
   retrieval: "docs",
   llmops: "route",
+  movies: "route",
 };
 
 const fills: Record<ProjectTheme, string> = {
