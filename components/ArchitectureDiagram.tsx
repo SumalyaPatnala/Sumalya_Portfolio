@@ -291,34 +291,54 @@ function RetrievalDiagram() {
 
 function WeaveDiagram() {
   return (
-    <SvgFrame variant="weave" width={640} height={168}>
-      <Box x={12} y={64} w={100} h={40} label="Query" />
-      <Arrow x1={112} y1={84} x2={140} y2={84} />
-      <Box x={140} y={64} w={110} h={40} label="Open VLM" />
-      <Arrow x1={250} y1={84} x2={278} y2={84} />
-      <Box x={278} y={56} w={120} h={56} label="Retrieval" accent />
-      <Arrow x1={398} y1={84} x2={426} y2={84} />
-      <Box x={426} y={64} w={80} h={40} label="Tools" />
-      <Arrow x1={506} y1={84} x2={534} y2={84} />
-      <Box x={534} y={64} w={94} h={40} label="Eval" />
+    <SvgFrame variant="weave" width={640} height={188}>
+      <text
+        x={320}
+        y={22}
+        textAnchor="middle"
+        fill="var(--diagram-muted)"
+        fontSize="12"
+        fontFamily="ui-monospace, monospace"
+      >
+        INTENDED · NOT IMPLEMENTED
+      </text>
+      <Box x={12} y={84} w={100} h={40} label="Query" />
+      <Arrow x1={112} y1={104} x2={140} y2={104} />
+      <Box x={140} y={84} w={110} h={40} label="Open VLM" />
+      <Arrow x1={250} y1={104} x2={278} y2={104} />
+      <Box x={278} y={76} w={120} h={56} label="Retrieval" accent />
+      <Arrow x1={398} y1={104} x2={426} y2={104} />
+      <Box x={426} y={84} w={80} h={40} label="Tools" />
+      <Arrow x1={506} y1={104} x2={534} y2={104} />
+      <Box x={534} y={84} w={94} h={40} label="Eval" />
     </SvgFrame>
   );
 }
 
 function WorldSenseDiagram() {
   return (
-    <SvgFrame variant="worldsense" width={640} height={168}>
-      <Box x={12} y={64} w={72} h={40} label="MP4" />
-      <Arrow x1={84} y1={84} x2={110} y2={84} />
-      <Box x={110} y={64} w={88} h={40} label="Frames" />
-      <Arrow x1={198} y1={84} x2={224} y2={84} />
-      <Box x={224} y={56} w={120} h={56} label="Faster R-CNN" accent />
-      <Arrow x1={344} y1={84} x2={370} y2={84} />
-      <Box x={370} y={64} w={88} h={40} label="Track IDs" />
-      <Arrow x1={458} y1={84} x2={484} y2={84} />
-      <Box x={484} y={64} w={64} h={40} label="ROI" />
-      <Arrow x1={548} y1={84} x2={568} y2={84} />
-      <Box x={568} y={64} w={64} h={40} label="Store" />
+    <SvgFrame variant="worldsense" width={640} height={188}>
+      <text
+        x={320}
+        y={22}
+        textAnchor="middle"
+        fill="var(--diagram-muted)"
+        fontSize="12"
+        fontFamily="ui-monospace, monospace"
+      >
+        LOCAL PHASE 1 · NOT HOSTED
+      </text>
+      <Box x={12} y={84} w={72} h={40} label="MP4" />
+      <Arrow x1={84} y1={104} x2={110} y2={104} />
+      <Box x={110} y={84} w={88} h={40} label="Frames" />
+      <Arrow x1={198} y1={104} x2={224} y2={104} />
+      <Box x={224} y={76} w={120} h={56} label="Faster R-CNN" accent />
+      <Arrow x1={344} y1={104} x2={370} y2={104} />
+      <Box x={370} y={84} w={88} h={40} label="Track IDs" />
+      <Arrow x1={458} y1={104} x2={484} y2={104} />
+      <Box x={484} y={84} w={64} h={40} label="ROI" />
+      <Arrow x1={548} y1={104} x2={568} y2={104} />
+      <Box x={568} y={84} w={64} h={40} label="Store" />
     </SvgFrame>
   );
 }

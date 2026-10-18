@@ -53,6 +53,7 @@ export type Project = {
   diagram: "router" | "slm" | "soc" | "multimodal" | "retrieval" | "llmops" | "weave" | "worldsense";
   caseStudy: {
     whyItMatters: string;
+    question: string;
     constraints: string[];
     architecture: string[];
     decisions: { title: string; body: string }[];
@@ -111,6 +112,8 @@ export const projects: Project[] = [
     caseStudy: {
       whyItMatters:
         "Closed fashion models are hard to audit. An open VLM lab would make retrieval, attributes, and tool calls measurable before anyone treats the system as a product.",
+      question:
+        "Can an open VLM lab make fashion retrieval, attributes, and tool calls measurable before anyone treats the system as a product?",
       constraints: [
         "No licensed catalog is attached to this site.",
         "No fabricated retrieval or VLM scores.",
@@ -200,6 +203,8 @@ export const projects: Project[] = [
     caseStudy: {
       whyItMatters:
         "Video events are only useful if a later viewer can seek to the evidence frame and see the same boxes, IDs, and ROI the system logged.",
+      question:
+        "Can detections, persistent track IDs, and ROI enter/exit events be replayed against the source video instead of disappearing into a demo GIF?",
       constraints: [
         "Local inference only. No paid cloud APIs.",
         "Real pretrained detections — no synthetic boxes in the product path.",
@@ -315,6 +320,8 @@ export const projects: Project[] = [
     caseStudy: {
       whyItMatters:
         "Operators do not ask one kind of question. DNS failures, model-serving latency, outages, and replica planning need different tools and different failure modes. Routing is the first reliability feature, not a flourish.",
+      question:
+        "Can a typed route plus the original query keep specialist tools inspectable when operators mix network, inference, incident, and capacity questions?",
       constraints: [
         "Keep the user’s original query intact across graph hops—do not let the classifier rewrite the problem.",
         "Choose exactly one route; invalid routes fall back to incident investigation rather than guessing.",
@@ -449,6 +456,8 @@ export const projects: Project[] = [
     caseStudy: {
       whyItMatters:
         "Small models are the ones you can actually iterate on. If structured community-advice outputs are the product, the evaluation has to score structure and safety, not just fluency.",
+      question:
+        "If structured community-advice outputs are the product, can evaluation score the contract — structure, SDG hit, safety — rather than fluency?",
       constraints: [
         "Consumer hardware: MLX LoRA on Phi-3 Mini, batch size 1, 100 iterations.",
         "Outputs must follow a category / SDG / actions contract.",
@@ -574,6 +583,8 @@ export const projects: Project[] = [
     caseStudy: {
       whyItMatters:
         "An investigation agent is only as honest as the evidence object it receives. Deterministic preprocessing is the evaluation prerequisite, not an afterthought.",
+      question:
+        "Can a later model be wrong about meaning without being wrong about the evidence object it inherited?",
       constraints: [
         "Real public telemetry only (Splunk BOTS v3). No fabricated incidents in the product path.",
         "Never invent a timestamp or timezone.",
@@ -676,6 +687,8 @@ export const projects: Project[] = [
     caseStudy: {
       whyItMatters:
         "The research question is whether a multimodal retrieval assistant can help analysts inspect social-innovation material without flattening it into uncited chat.",
+      question:
+        "Can a retrieval-first, multimodal assistant help researchers inspect social-innovation evidence without collapsing the trail of sources into uncited prose?",
       constraints: [
         "Academic compute: local Ollama models, consumer GPUs/CPUs, Streamlit as the interface.",
         "Sources include PDFs and public video—not licensed enterprise corpora.",
@@ -768,6 +781,8 @@ export const projects: Project[] = [
     caseStudy: {
       whyItMatters:
         "Retrieval is where most 'LLM products' actually live. If the evidence set is wrong, generation cannot be rescued by a better prompt.",
+      question:
+        "If the retrieved evidence set is wrong, can generation be rescued by a better prompt — or does evaluation have to sit beside serving?",
       constraints: [
         "Regulated document handling: PII, access control, and source grounding matter more than novelty.",
         "Serving path had to fit existing container and CI/CD practice (OpenShift, Jenkins).",
@@ -856,6 +871,8 @@ export const projects: Project[] = [
     caseStudy: {
       whyItMatters:
         "Inference routing is where evaluation meets operations: which model ran, how long it took, and what you fall back to when the preferred runtime is down.",
+      question:
+        "Can a serving router log which runtime actually ran so evaluation jobs can pin a path instead of averaging auto-fallback?",
       constraints: [
         "Local-first: Ollama on localhost, optional remote Hugging Face endpoint.",
         "No paid service required for the default path.",
@@ -907,6 +924,24 @@ export const projects: Project[] = [
 
 export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug);
+}
+
+export function caseStudyOrder() {
+  const vision = visionProjects();
+  const featured = featuredProjects();
+  const used = new Set([...vision, ...featured].map((project) => project.slug));
+  const rest = projects.filter((project) => !used.has(project.slug));
+  return [...vision, ...featured, ...rest];
+}
+
+export function neighboringProjects(slug: string) {
+  const ordered = caseStudyOrder();
+  const index = ordered.findIndex((project) => project.slug === slug);
+  if (index < 0) return { previous: undefined, next: undefined };
+  return {
+    previous: index > 0 ? ordered[index - 1] : undefined,
+    next: index < ordered.length - 1 ? ordered[index + 1] : undefined,
+  };
 }
 
 export const featuredOrder = [

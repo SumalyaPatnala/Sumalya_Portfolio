@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  caseStudyOrder,
   featuredProjects,
   filterProjects,
   getProject,
+  neighboringProjects,
   projectReadiness,
   projects,
   visionProjects,
@@ -142,6 +144,33 @@ describe("project catalog", () => {
       "styleweave-vlm-lab",
       "worldsense-ai",
     ]);
+  });
+
+  it("gives every case study a research question without inventing results", () => {
+    for (const project of projects) {
+      expect(project.caseStudy.question.endsWith("?")).toBe(true);
+    }
+    expect(getProject("styleweave-vlm-lab")?.caseStudy.question).not.toMatch(
+      /implemented|benchmark|mAP/i,
+    );
+    expect(getProject("worldsense-ai")?.caseStudy.question).toMatch(/replayed/i);
+  });
+
+  it("orders case-study navigation vision-first, then the four public systems", () => {
+    expect(caseStudyOrder().map((project) => project.slug)).toEqual([
+      "styleweave-vlm-lab",
+      "worldsense-ai",
+      "ai-infrastructure-network-intelligence",
+      "slm-finetuning-evaluation",
+      "llmops-hybrid-inference",
+      "agentic-soc-platform",
+      "multimodal-llm-assistant",
+      "document-retrieval-engineering",
+    ]);
+    expect(neighboringProjects("styleweave-vlm-lab").next?.slug).toBe("worldsense-ai");
+    expect(neighboringProjects("worldsense-ai").previous?.slug).toBe(
+      "styleweave-vlm-lab",
+    );
   });
 
   it("does not claim MLflow is wired in the LLMOps serving path", () => {

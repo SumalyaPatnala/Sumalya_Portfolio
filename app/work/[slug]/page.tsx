@@ -1,15 +1,37 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
+import { CaseStudyNav } from "@/components/CaseStudyNav";
+import { CaseStudyToc } from "@/components/CaseStudyToc";
 import { CodeSnippet } from "@/components/CodeSnippet";
 import { Container } from "@/components/Container";
 import { CopyLinkButton } from "@/components/CopyLinkButton";
+import { MeasuredVisuals } from "@/components/MeasuredVisuals";
 import { ProjectArt, artKindFor } from "@/components/ProjectArt";
 import { RoutingEvalTable } from "@/components/RoutingEvalTable";
 import { SlmEvalTable } from "@/components/SlmEvalTable";
 import { EvidenceBadge, StatusBadge } from "@/components/StatusBadge";
 import { evidenceRecordExcerpt, routingDecisionExcerpt } from "@/content/artifacts";
-import { getProject, projects } from "@/content/projects";
+import {
+  getProject,
+  neighboringProjects,
+  projectReadiness,
+  projects,
+  readinessLabels,
+  type Project,
+  type ProjectTheme,
+} from "@/content/projects";
+import { cn } from "@/lib/cn";
+
+const themeField: Record<ProjectTheme, string> = {
+  rose: "bg-rose",
+  coral: "bg-coral",
+  lavender: "bg-lavender",
+  teal: "bg-teal",
+  yellow: "bg-yellow",
+};
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -39,206 +61,375 @@ export default async function CaseStudyPage({
   const project = getProject(slug);
   if (!project) notFound();
   const study = project.caseStudy;
+  const neighbors = neighboringProjects(project.slug);
+  const readiness = projectReadiness(project);
+  const vision = Boolean(project.vision);
 
   return (
     <main id="main" tabIndex={-1}>
-      <Container className="pt-10 pb-8 sm:pt-16">
-        <p className="kicker">{project.eyebrow}</p>
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <StatusBadge label={project.statusLabel} status={project.status} />
-          <CopyLinkButton />
-        </div>
-        <h1 className="display mt-4 max-w-4xl text-balance text-3xl sm:text-5xl">
-          {project.title}
-        </h1>
-        <div className="mt-6 max-w-4xl overflow-hidden rounded-[1.4rem]">
-          <ProjectArt
-            kind={artKindFor(project)}
-            theme={project.theme}
-            className="aspect-[16/7]"
-          />
-          <p className="mt-2 text-xs text-fg-faint">
-            Original placeholder illustration — not a product screenshot.
-          </p>
-        </div>
-        <p className="mt-5 max-w-2xl text-lg text-fg-muted">{project.summary}</p>
-        <div className="mt-5 flex flex-wrap gap-4 text-sm">
-          {project.github ? (
-            <a href={project.github} rel="noreferrer" target="_blank">
-              GitHub
-            </a>
-          ) : null}
-          {project.demo ? (
-            <a href={project.demo.href} rel="noreferrer" target="_blank">
-              {project.demo.label}
-            </a>
-          ) : null}
-        </div>
-        {project.demo ? (
-          <p className="mt-3 max-w-2xl text-sm text-fg-muted">{project.demo.note}</p>
-        ) : null}
+      <Container className="pt-8 pb-6 sm:pt-12">
+        <p className="text-sm">
+          <Link href="/work" className="text-fg-muted hover:text-fg">
+            Work
+          </Link>
+          <span aria-hidden="true" className="mx-2 text-fg-faint">
+            /
+          </span>
+          <span className="text-fg">{project.title}</span>
+        </p>
+
+        {vision ? (
+          <VisionHero project={project} readiness={readinessLabels[readiness]} />
+        ) : (
+          <StandardHero project={project} readiness={readinessLabels[readiness]} />
+        )}
+
+        <CaseStudyToc />
       </Container>
 
-      <Container className="space-y-12 pb-24">
-        <section>
-          <h2 className="display text-3xl">Problem and why it matters</h2>
-          <p className="mt-4 max-w-3xl text-fg-muted">{project.problem}</p>
-          <p className="mt-3 max-w-3xl text-fg-muted">{study.whyItMatters}</p>
-        </section>
+      <Container className="grid gap-10 pb-24 lg:grid-cols-[minmax(0,1fr)_14rem] lg:items-start">
+        <div className="min-w-0 space-y-14 sm:space-y-16">
+          <StudySection id="problem" title="Problem and why it matters">
+            <p>{project.problem}</p>
+            <p className="mt-4">{study.whyItMatters}</p>
+          </StudySection>
 
-        <section>
-          <h2 className="display text-3xl">My technical contributions</h2>
-          <p className="mt-4 max-w-3xl text-fg-muted">{project.contribution}</p>
-        </section>
+          <StudySection id="question" title="Research question">
+            <blockquote className="display max-w-3xl text-2xl leading-snug text-fg sm:text-3xl">
+              {study.question}
+            </blockquote>
+          </StudySection>
 
-        <section>
-          <h2 className="display text-3xl">Constraints</h2>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-fg-muted">
-            {study.constraints.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="display text-3xl">System architecture</h2>
-          <p className="mt-4 text-fg-muted">{project.architectureSummary}</p>
-          <div className="panel mt-6 p-4">
-            <ArchitectureDiagram variant={project.diagram} />
-          </div>
-          <ul className="mt-6 list-disc space-y-2 pl-5 text-fg-muted">
-            {study.architecture.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
-
-        {project.slug === "ai-infrastructure-network-intelligence" ? (
-          <CodeSnippet {...routingDecisionExcerpt} />
-        ) : null}
-        {project.slug === "agentic-soc-platform" ? (
-          <CodeSnippet {...evidenceRecordExcerpt} />
-        ) : null}
-
-        <section>
-          <h2 className="display text-3xl">Research hypotheses and tradeoffs</h2>
-          <div className="mt-6 grid gap-4">
-            {study.decisions.map((item) => (
-              <article key={item.title} className="panel p-5">
-                <h3 className="text-lg">{item.title}</h3>
-                <p className="mt-2 text-sm text-fg-muted">{item.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section>
-          <h2 className="display text-3xl">Models, algorithms, and implementation</h2>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-fg-muted">
-            {study.implementation.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          <p className="mt-4 font-mono text-xs text-fg-muted">
-            {project.tech.join(" · ")}
-          </p>
-        </section>
-
-        <section>
-          <h2 className="display text-3xl">Verification and evaluation</h2>
-          <p className="mt-4 max-w-3xl text-fg-muted">{study.evaluation}</p>
-          {project.slug === "slm-finetuning-evaluation" ? (
-            <div className="mt-6">
-              <SlmEvalTable />
+          <StudySection id="approach" title="Approach">
+            <p>{project.contribution}</p>
+            <h3 className="mt-8 text-lg">Constraints</h3>
+            <ul className="mt-3 list-disc space-y-2 pl-5">
+              {study.constraints.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <h3 className="mt-8 text-lg">Decisions and tradeoffs</h3>
+            <div className="mt-4 grid gap-4">
+              {study.decisions.map((item) => (
+                <article key={item.title} className="panel p-5">
+                  <h4 className="text-base">{item.title}</h4>
+                  <p className="mt-2 text-sm">{item.body}</p>
+                </article>
+              ))}
             </div>
-          ) : null}
-          {project.slug === "ai-infrastructure-network-intelligence" ? (
-            <div className="mt-6">
-              <RoutingEvalTable />
+          </StudySection>
+
+          <StudySection id="architecture" title="Architecture">
+            <p>{project.architectureSummary}</p>
+            <div className="panel mt-6 p-4 sm:p-5">
+              <ArchitectureDiagram variant={project.diagram} />
             </div>
-          ) : null}
-        </section>
+            <ul className="mt-6 list-disc space-y-2 pl-5">
+              {study.architecture.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </StudySection>
 
-        <section>
-          <h2 className="display text-3xl">Results</h2>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-fg-muted">
-            {study.results.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          <div className="mt-6 space-y-3">
-            {project.evidence.map((item) => (
-              <p key={item.statement} className="text-sm text-fg-muted">
-                <EvidenceBadge kind={item.kind} />
-                <span className="mt-1 block">{item.statement}</span>
-              </p>
-            ))}
-          </div>
-        </section>
-
-        {study.responsibility ? (
-          <section>
-            <h2 className="display text-3xl">Engineering responsibility</h2>
-            <p className="mt-3 max-w-3xl text-sm text-fg-muted">
-              Optional analysis of this artifact. No estimated energy or carbon
-              figures without a named method.
+          <StudySection id="implementation" title="Implementation">
+            <ul className="list-disc space-y-2 pl-5">
+              {study.implementation.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <p className="mt-5 font-mono text-xs text-fg-faint">
+              {project.tech.join(" · ")}
             </p>
-            <dl className="mt-5 grid gap-4">
-              <div className="panel p-5">
-                <dt className="text-sm text-accent-soft">Utility and correctness</dt>
-                <dd className="mt-2 text-sm text-fg-muted">{study.responsibility.utility}</dd>
+            {project.slug === "ai-infrastructure-network-intelligence" ? (
+              <div className="mt-6">
+                <CodeSnippet {...routingDecisionExcerpt} />
               </div>
-              <div className="panel p-5">
-                <dt className="text-sm text-accent-soft">Reliability and evaluation</dt>
-                <dd className="mt-2 text-sm text-fg-muted">{study.responsibility.reliability}</dd>
+            ) : null}
+            {project.slug === "agentic-soc-platform" ? (
+              <div className="mt-6">
+                <CodeSnippet {...evidenceRecordExcerpt} />
               </div>
-              <div className="panel p-5">
-                <dt className="text-sm text-accent-soft">Computational efficiency</dt>
-                <dd className="mt-2 text-sm text-fg-muted">{study.responsibility.efficiency}</dd>
+            ) : null}
+          </StudySection>
+
+          <StudySection id="evaluation" title="Evaluation">
+            <p>{study.evaluation}</p>
+            <MeasuredVisuals slug={project.slug} />
+            {project.slug === "slm-finetuning-evaluation" ? (
+              <div className="mt-6">
+                <SlmEvalTable />
               </div>
-              {study.responsibility.environment ? (
+            ) : null}
+            {project.slug === "ai-infrastructure-network-intelligence" ? (
+              <div className="mt-6">
+                <RoutingEvalTable />
+              </div>
+            ) : null}
+          </StudySection>
+
+          <StudySection id="results" title="Results">
+            <ul className="list-disc space-y-2 pl-5">
+              {study.results.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <div className="mt-6 space-y-4">
+              {project.evidence.map((item) => (
+                <p key={item.statement} className="text-sm">
+                  <EvidenceBadge kind={item.kind} />
+                  <span className="mt-1 block">{item.statement}</span>
+                </p>
+              ))}
+            </div>
+          </StudySection>
+
+          {study.responsibility ? (
+            <section aria-labelledby="responsibility-heading" className="scroll-mt-24">
+              <h2 id="responsibility-heading" className="display text-3xl sm:text-4xl">
+                Engineering responsibility
+              </h2>
+              <p className="study-copy mt-5">
+                Optional analysis of this artifact. No estimated energy or carbon
+                figures without a named method.
+              </p>
+              <dl className="mt-5 grid gap-4">
                 <div className="panel p-5">
-                  <dt className="text-sm text-accent-soft">Environmental impact</dt>
-                  <dd className="mt-2 text-sm text-fg-muted">
-                    {study.responsibility.environment}
-                  </dd>
+                  <dt className="text-sm text-accent-soft">Utility and correctness</dt>
+                  <dd className="study-copy mt-2 text-sm">{study.responsibility.utility}</dd>
                 </div>
-              ) : null}
-              <div className="panel p-5">
-                <dt className="text-sm text-accent-soft">Unresolved</dt>
-                <dd className="mt-2 text-sm text-fg-muted">{study.responsibility.unresolved}</dd>
-              </div>
-            </dl>
-          </section>
-        ) : null}
+                <div className="panel p-5">
+                  <dt className="text-sm text-accent-soft">Reliability and evaluation</dt>
+                  <dd className="study-copy mt-2 text-sm">{study.responsibility.reliability}</dd>
+                </div>
+                <div className="panel p-5">
+                  <dt className="text-sm text-accent-soft">Computational efficiency</dt>
+                  <dd className="study-copy mt-2 text-sm">{study.responsibility.efficiency}</dd>
+                </div>
+                {study.responsibility.environment ? (
+                  <div className="panel p-5">
+                    <dt className="text-sm text-accent-soft">Environmental impact</dt>
+                    <dd className="study-copy mt-2 text-sm">
+                      {study.responsibility.environment}
+                    </dd>
+                  </div>
+                ) : null}
+                <div className="panel p-5">
+                  <dt className="text-sm text-accent-soft">Unresolved</dt>
+                  <dd className="study-copy mt-2 text-sm">{study.responsibility.unresolved}</dd>
+                </div>
+              </dl>
+            </section>
+          ) : null}
 
-        <section>
-          <h2 className="display text-3xl">Failure analysis</h2>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-fg-muted">
-            {study.limitations.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
+          <StudySection id="limitations" title="Limitations">
+            <ul className="list-disc space-y-2 pl-5">
+              {study.limitations.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </StudySection>
 
-        <section>
-          <h2 className="display text-3xl">Future work</h2>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-fg-muted">
-            {study.next.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
+          <StudySection id="next" title="Next steps">
+            <ul className="list-disc space-y-2 pl-5">
+              {study.next.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </StudySection>
 
-        <section>
-          <h2 className="display text-3xl">Reproducibility</h2>
-          <ol className="mt-4 list-decimal space-y-2 pl-5 text-fg-muted">
-            {study.reproduce.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ol>
-        </section>
+          <StudySection id="reproduce" title="Reproducibility">
+            <ol className="list-decimal space-y-2 pl-5">
+              {study.reproduce.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ol>
+          </StudySection>
+
+          <CaseStudyNav previous={neighbors.previous} next={neighbors.next} />
+        </div>
+
+        <aside className="no-print hidden lg:block">
+          <div className="sticky top-20 space-y-4">
+            <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-fg-faint">
+              Evidence
+            </p>
+            <EvidenceRail project={project} />
+          </div>
+        </aside>
       </Container>
     </main>
+  );
+}
+
+function StudySection({
+  id,
+  title,
+  children,
+}: {
+  id: string;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <section id={id} aria-labelledby={`${id}-heading`} className="scroll-mt-24">
+      <h2 id={`${id}-heading`} className="display text-3xl sm:text-4xl">
+        {title}
+      </h2>
+      <div className="study-copy mt-5 max-w-3xl">{children}</div>
+    </section>
+  );
+}
+
+function StandardHero({
+  project,
+  readiness,
+}: {
+  project: Project;
+  readiness: string;
+}) {
+  return (
+    <header className="mt-6">
+      <p className="kicker">{project.eyebrow}</p>
+      <div className="mt-3 flex flex-wrap items-center gap-3">
+        <StatusBadge label={project.statusLabel} status={project.status} />
+        <span className="rounded-full border border-line px-2.5 py-1 text-xs text-fg-muted">
+          {readiness}
+        </span>
+        <CopyLinkButton />
+      </div>
+      <h1 className="display mt-4 max-w-4xl text-balance text-3xl sm:text-5xl">
+        {project.title}
+      </h1>
+      <div className="mt-6 max-w-4xl overflow-hidden rounded-[1.4rem]">
+        <ProjectArt
+          kind={artKindFor(project)}
+          theme={project.theme}
+          className="aspect-[16/7]"
+        />
+        <p className="mt-2 text-xs text-fg-faint">
+          Original placeholder illustration — not a product screenshot.
+        </p>
+      </div>
+      <p className="mt-5 max-w-2xl text-lg text-fg-muted">{project.summary}</p>
+      <HeroLinks project={project} />
+    </header>
+  );
+}
+
+function VisionHero({
+  project,
+  readiness,
+}: {
+  project: Project;
+  readiness: string;
+}) {
+  return (
+    <header
+      className={cn(
+        "mt-6 overflow-hidden rounded-[1.8rem] text-ink shadow-[var(--shadow)]",
+        themeField[project.theme],
+      )}
+    >
+      <ProjectArt
+        kind={artKindFor(project)}
+        theme={project.theme}
+        className="aspect-[16/8] sm:aspect-[16/6]"
+      />
+      <div className="p-5 sm:p-8">
+        <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-ink/70">
+          {project.eyebrow}
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <span className="rounded-full border border-ink/20 bg-cream/70 px-2.5 py-1 text-xs text-ink">
+            {readiness}
+          </span>
+          <StatusBadge label={project.statusLabel} status={project.status} />
+          <CopyLinkButton className="border-ink/25 text-ink hover:text-ink" />
+        </div>
+        <h1 className="display mt-4 max-w-4xl text-balance text-3xl text-ink sm:text-5xl">
+          {project.title}
+        </h1>
+        <p className="mt-4 max-w-2xl text-lg text-ink/85">{project.summary}</p>
+        {project.inProgress ? (
+          <ul className="mt-5 grid gap-2 text-sm text-ink/85 sm:grid-cols-2">
+            {project.inProgress.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        ) : null}
+        <p className="mt-4 text-xs text-ink/60">
+          Original placeholder illustration — not a product screenshot.
+        </p>
+        <HeroLinks project={project} ink />
+      </div>
+    </header>
+  );
+}
+
+function HeroLinks({
+  project,
+  ink = false,
+}: {
+  project: Project;
+  ink?: boolean;
+}) {
+  const linkClass = ink
+    ? "text-ink underline decoration-ink/35 underline-offset-4"
+    : undefined;
+
+  return (
+    <>
+      <div className="mt-5 flex flex-wrap gap-4 text-sm">
+        {project.github ? (
+          <a href={project.github} rel="noreferrer" target="_blank" className={linkClass}>
+            GitHub
+          </a>
+        ) : (
+          <span className={ink ? "text-ink/70" : "text-fg-muted"}>No public repository</span>
+        )}
+        {project.demo ? (
+          <a href={project.demo.href} rel="noreferrer" target="_blank" className={linkClass}>
+            {project.demo.label}
+          </a>
+        ) : (
+          <span className={ink ? "text-ink/70" : "text-fg-muted"}>No hosted demo</span>
+        )}
+      </div>
+      {project.demo ? (
+        <p className={cn("mt-3 max-w-2xl text-sm", ink ? "text-ink/75" : "text-fg-muted")}>
+          {project.demo.note}
+        </p>
+      ) : null}
+    </>
+  );
+}
+
+function EvidenceRail({ project }: { project: Project }) {
+  return (
+    <ul className="space-y-3 text-sm text-fg-muted">
+      <li>
+        {project.github ? (
+          <a href={project.github} rel="noreferrer" target="_blank">
+            Public GitHub
+          </a>
+        ) : (
+          "No public GitHub"
+        )}
+      </li>
+      <li>
+        {project.demo ? (
+          <a href={project.demo.href} rel="noreferrer" target="_blank">
+            {project.demo.label}
+          </a>
+        ) : (
+          "No hosted demo"
+        )}
+      </li>
+      <li>
+        {project.evidence.some((item) => item.kind === "eval-artifact")
+          ? "Eval artifact on this page"
+          : "No public eval artifact"}
+      </li>
+    </ul>
   );
 }

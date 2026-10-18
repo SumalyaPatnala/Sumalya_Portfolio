@@ -206,6 +206,23 @@ a {
   animation-delay: 0.24s;
 }
 
+.study-copy {
+  color: var(--fg-muted);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.study-copy :is(h3, h4) {
+  color: var(--fg);
+  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
+  font-weight: 560;
+  letter-spacing: -0.02em;
+}
+
+.study-copy blockquote {
+  margin: 0;
+}
+
 .theme-dark-label {
   display: none;
 }
